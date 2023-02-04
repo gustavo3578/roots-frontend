@@ -56,7 +56,7 @@ function login_mutation(email, password) {
             localStorage.setItem('logged', true);
             localStorage.setItem('token', data['data']['logIn']['token']);
             localStorage.setItem('email', email);
-            window.location.href = "pages/character.html";
+            window.location.href = "pages/game.html";
         })
         .catch(err => {
             console.error(err);
