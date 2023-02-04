@@ -8,7 +8,7 @@ function fill_characters_panel(data){
         // <img src="${character['sprite']}" class="img-circle"></img>
         document.getElementById('chars_panel').innerHTML += `
         <div class="col-sm-4" name="select_char">
-            <input type="radio" name="select_char" value="${character['name']}">
+            <input type="radio" name="select_char" value="${character['id']}">
             <label for="${character['name']}">${character['name']}</label><br>
             <div class="image-box">
                 <table>

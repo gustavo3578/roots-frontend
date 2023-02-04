@@ -130,17 +130,15 @@ function draw() {
 
 
 function start_game() {
-    var char_name = document.querySelector('input[name="select_char"]:checked').value;
-    var input_data = `{ characterName: \\\"${char_name}\\\" `;
-    input_data += `mapArea: FOREST `;
-    input_data += `serverReference: \\\"server1\\\" }`;
+    var char_id = document.querySelector('input[name="select_char"]:checked').value;
+    var input_data = `{ id: \\\"${char_id}\\\" }`;
     var token = localStorage.getItem('token');
     character_login_mutation(input_data, `JWT ${token}`).then(data => {
-        if (!data['characterLogin']['logStatus']['logged']) {
+        if (!data['characterLogin']['logStatus']) {
             alert('Failed to log in');
             return;
         }
-        localStorage.setItem('char_name', data['characterLogin']['logStatus']['charName']);
+        localStorage.setItem('char_id', char_id);
         window.location.href = 'game.html';
     });
 }

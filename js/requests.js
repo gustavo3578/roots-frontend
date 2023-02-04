@@ -28,34 +28,6 @@ function get_request_options(payload) {
 };
 
 
-// function query_entities() {
-//     /*
-//     Request the entities (elements, objects, players, etc) currently
-//     active on the game. Receives a json containing logged users and
-//     their position on the map.
-//         - Params: None
-//         - Return: Object
-//     */
-//     var token = localStorage.getItem('token');
-//     var headers = {
-//         "cookie": "csrftoken=9YXcKsPnJSojmIXsjvqlM7TFP0tBfiU8GwVopYDWNKHSQnEUKLnPzJdsCjSb0Cfn",
-//         "Content-Type": "application/json",
-//         "Authorization": `JWT ${token}`
-//     };
-//     return fetch(server_host, {
-//         "method": "POST",
-//         "headers": headers,
-//         "body": "{\"query\":\"query{\\n  entities(logged:true){\\n    name\\n    logged\\n    location{\\n      x\\n      y\\n    }\\n  }\\n}\\n\"}"
-//     })
-//         .then(json)
-//         .then(data => {
-//             return data['data']['entities'];
-//         })
-//         .catch(err => {
-//             console.error(err);
-//         });
-// };
-
 
 function login_mutation(email, password) {
     /*
@@ -210,9 +182,9 @@ function user_characters() {
 
 function character_login_mutation(input_data, authorization) {
     const query = `characterLogin(input: ${input_data})`;
-    const payload = `{"query": "mutation charLogin{${query}{logStatus{charName logged}}}"}`;
+    const payload = `{"query": "mutation charLogin{${query}{logStatus}}"}`;
     var options = get_request_options(payload);
-    options['headers']['Authorization'] = authorization;
+    // options['headers']['Authorization'] = authorization;
     return fetch(server_host, options)
         .then(json)
         .then(response => {
@@ -240,6 +212,7 @@ function character_logout_mutation(input_data, authorization) {
             console.error(err);
         });
 };
+
 
 function new_user_sign_up(username, password, email) {
     var payload = `{"query":"mutation{signUp(input: {username: \\\"${username}\\\" password: \\\"${password}\\\" email: \\\"${email}\\\"}){user {username}}}"}`;
