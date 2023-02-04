@@ -56,7 +56,7 @@ function login_mutation(email, password) {
             localStorage.setItem('logged', true);
             localStorage.setItem('token', data['data']['logIn']['token']);
             localStorage.setItem('email', email);
-            window.location.href = "pages/game.html";
+            window.location.href = "pages/character.html";
         })
         .catch(err => {
             console.error(err);
@@ -101,20 +101,21 @@ function update_position(player, x, y) {
             + x: int;            + y: int;
         - Return: null | undefined
     */
-    var token = localStorage.getItem('token');
+    // var token = localStorage.getItem('token');
     var headers = {
         "cookie": "csrftoken=9YXcKsPnJSojmIXsjvqlM7TFP0tBfiU8GwVopYDWNKHSQnEUKLnPzJdsCjSb0Cfn",
         "Content-Type": "application/json",
-        "Authorization": `JWT ${token}`
+        // "Authorization": `JWT ${token}`
     };
     return fetch(server_host, {
         "method": "POST",
         "headers": headers,
-        "body": `{\"query\":\"mutation { updatePosition(input: { reference: \\\"${player}\\\" location: { x: ${x} y: ${y} } }){ entity { name location { x y } } } }\"}`
+        "body": `{\"query\":\"mutation { updatePosition(input: { id: \\\"${player}\\\" location: { x: ${x} y: ${y} } }){ character { name positionX positionY } } }\"}`
     })
         .then(json)
         .then(data => {
             console.log("data", data)
+            return data
         })
         .catch(err => {
             console.error(err);
@@ -182,7 +183,8 @@ function user_characters() {
 
 function character_login_mutation(input_data, authorization) {
     const query = `characterLogin(input: ${input_data})`;
-    const payload = `{"query": "mutation charLogin{${query}{logStatus} mapArea(name:  \\\"${area_location}\\\"){name sizeX sizeY connections}}"}`;
+    const payload = `{"query": "mutation charLogin{${query}{logStatus}}"}`;
+    console.log(payload)
     var options = get_request_options(payload);
     // options['headers']['Authorization'] = authorization;
     return fetch(server_host, options)
@@ -238,7 +240,7 @@ function new_user_sign_up(username, password, email) {
 
 
 function query_logged_characters(area_location) {
-    const payload = `{"query": "query characters{ characters(isLogged: true areaLocation: \\\"${area_location}\\\"){ name positionX positionY isLogged }} "}`;
+    const payload = `{"query": "query characters{ characters(isLogged: true areaLocation: \\\"${area_location}\\\"){id name positionX positionY isLogged }} "}`;
     var options = get_request_options(payload);
     // options['headers']['Authorization'] = 'JWT ' + localStorage.getItem('token');
     return fetch(server_host, options)
@@ -266,3 +268,19 @@ function create_char_mutation(input_data, token) {
             console.error(err);
         });
 };
+
+
+function map_area_data_query(area_location){
+    const payload = `{"query": "query map_data{mapArea(name: \\\"${area_location}\\\"){mapArea{name sizeX sizeY connections}}}"}`;
+    var options = get_request_options(payload);
+    // options['headers']['Authorization'] = 'JWT ' + token;
+    return fetch(server_host, options)
+        .then(json)
+        .then(response => {
+            console.log(response);
+            return response['data'];
+        })
+        .catch(err => {
+            console.error(err);
+        });
+}

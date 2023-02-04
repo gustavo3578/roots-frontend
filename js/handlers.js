@@ -40,26 +40,26 @@ function command(){
 
 // Gambiarra para fim de testes
 function moveup(){
-    var user = localStorage.getItem('char_name');
+    var user = localStorage.getItem('char_id');
     handle_action(user, 'move up');
 }
 function movedown(){
-    var user = localStorage.getItem('char_name');
+    var user = localStorage.getItem('char_id');
     handle_action(user, 'move down');
 }
 function moveleft(){
-    var user = localStorage.getItem('char_name');
+    var user = localStorage.getItem('char_id');
     handle_action(user, 'move left');
 }
 function moveright(){
-    var user = localStorage.getItem('char_name');
+    var user = localStorage.getItem('char_id');
     handle_action(user, 'move right');
 }
 
 
 function send_message(){
     var message_input = document.getElementById('message_input').value;
-    var user = localStorage.getItem('char_name');
+    var user = localStorage.getItem('char_id');
     handle_say(user, message_input);    
 }
 

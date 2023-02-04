@@ -1,11 +1,10 @@
-let charcter_sprite;
+let character_sprite;
 let images = {};
 let players = {};
 
 // Canvas frames
 var upperBuffer;  // game
 var lowerBuffer;  // chat window
-
 
 
 function set_players(data) {
@@ -16,13 +15,15 @@ function set_players(data) {
             character_sprite = createSprite(
                 data[i]['positionX'],
                 data[i]['positionY'],
-                40, 40, 'static');
-                character_sprite.addImage(images['character_default']);
+                40, 40, 'static'
+            );
+            character_sprite.addImage(images['character_default']);
             let player_data = {
                 "name": data[i]['name'],
                 "x": data[i]['positionX'],
                 "y": data[i]['positionY'],
                 "sprite": character_sprite,
+                "id": data[i]['id']
             }
             players[data[i]['id']] = player_data;
         }
@@ -39,7 +40,7 @@ function get_players(map_area) {
 
 function preload() {
     images['character_default'] = loadImage('https://raw.githubusercontent.com/brunolcarli/Goblins-Client/master/static/img/goblins/goblin.png');
-    images['forest_bg'] = loadImage('https://i.ibb.co/b680fpt/Map002.png');
+    images['forest_bg'] = loadImage('https://i.postimg.cc/nhKGBvtK/Map002480.png');
     console.log('images loaded');
 }
 
@@ -104,7 +105,6 @@ function draw() {
 
         // Add player name as sprite label
         for (let player in players) {
-            
             players[player]['label'] = text(
                 players[player]['name'],
                 players[player]['x'] - 15,
@@ -117,6 +117,7 @@ function draw() {
 
 function start_game() {
     let char_id = document.querySelector('input[name="select_char"]:checked').value;
+    console.log('>>>>', char_id)
     let area_location = document.getElementById(char_id).getAttribute('value');
     localStorage.setItem('char_location', area_location);
     var input_data = `{ id: \\\"${char_id}\\\"}`;
@@ -126,8 +127,11 @@ function start_game() {
             alert('Failed to log in');
             return;
         }
-        localStorage.setItem('map_size_x', data['mapArea']['sizeX']);
-        localStorage.setItem('map_size_y', data['mapArea']['sizeY']);
+        map_area_data_query(area_location).then(data => {
+            localStorage.setItem('map_size_x', data['mapArea']['sizeX']);
+            localStorage.setItem('map_size_y', data['mapArea']['sizeY']);
+        })
+        
         localStorage.setItem('char_id', char_id);
         window.location.href = 'game.html';
     });
