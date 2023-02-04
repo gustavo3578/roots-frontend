@@ -9,7 +9,7 @@ function fill_characters_panel(data){
         document.getElementById('chars_panel').innerHTML += `
         <div class="col-sm-4" name="select_char">
             <input type="radio" name="select_char" value="${character['id']}">
-            <label for="${character['name']}">${character['name']}</label><br>
+            <label id="${character['id']}" for="${character['name']}" value="${character['areaLocation']}">${character['name']}</label><br>
             <div class="image-box">
                 <table>
                     <tr>

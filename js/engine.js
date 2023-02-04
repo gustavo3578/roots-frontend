@@ -1,7 +1,6 @@
-let goblin;
+let charcter_sprite;
 let images = {};
 let players = {};
-let bg;
 
 // Canvas frames
 var upperBuffer;  // game
@@ -10,48 +9,46 @@ var lowerBuffer;  // chat window
 
 
 function set_players(data) {
+    data = data['characters'];
     players = {};  // resets the list
     for (let i = 0; i < data.length; i++) {
-        if (data[i]['logged'] == true) {
-            goblin = createSprite(
-                data[i]['location']["x"],
-                data[i]['location']["y"],
+        if (data[i]['isLogged'] == true) {
+            character_sprite = createSprite(
+                data[i]['positionX'],
+                data[i]['positionY'],
                 40, 40, 'static');
-            goblin.addImage(images['goblin_default']);
+                character_sprite.addImage(images['character_default']);
             let player_data = {
-                "x": data[i]['location']["x"],
-                "y": data[i]['location']["y"],
-                "sprite": goblin,
+                "name": data[i]['name'],
+                "x": data[i]['positionX'],
+                "y": data[i]['positionY'],
+                "sprite": character_sprite,
             }
-            players[data[i]['name']] = player_data;
+            players[data[i]['id']] = player_data;
         }
     }
 }
 
 
-function get_players() {
-    query_logged_characters().then((data) => {
+function get_players(map_area) {
+    query_logged_characters(map_area).then((data) => {
         set_players(data);
     });
 };
 
 
 function preload() {
-    images['goblin_default'] = loadImage('https://raw.githubusercontent.com/brunolcarli/Goblins-Client/master/static/img/goblins/goblin.png');
+    images['character_default'] = loadImage('https://raw.githubusercontent.com/brunolcarli/Goblins-Client/master/static/img/goblins/goblin.png');
     images['forest_bg'] = loadImage('https://i.ibb.co/b680fpt/Map002.png');
     console.log('images loaded');
 }
 
 
-function draw_upper_buffer(camera) {
+function draw_upper_buffer() {
     /*
     Draws the play screen.
     */
-    // upperBuffer.background('rgba(0,255,0, 0.25)');
-    // upperBuffer.background(images['forest_bg']);
-    // floor = new Sprite(250, 200, 500, 40, 'static');
-    bg = createSprite(camera.x, camera.y, 500, 40);
-    bg.addImage(images['forest_bg']);
+    upperBuffer.background(images['forest_bg']);
 }
 
 
@@ -81,15 +78,12 @@ function setup() {
     console.log(login_status);
     if (login_status) {
         console.log('Logged in!');
-        createCanvas(500, 500);
-        upperBuffer = createGraphics(1968, 2744);
-        lowerBuffer = createGraphics(1968, 200);
-        get_players();
-        console.log(players);
-        // draw_upper_buffer();
-        // draw_lower_buffer();
-        // image(lowerBuffer, 0, 0);
-        // image(upperBuffer, 0, 100);
+        let size_x = localStorage.getItem('map_size_x');
+        let size_y = localStorage.getItem('map_size_y');
+        createCanvas(size_x, size_y);
+        upperBuffer = createGraphics(size_x, size_y);
+        lowerBuffer = createGraphics(size_x, 200);
+        get_players(localStorage.getItem('char_location'));
     }
     else {
         alert('Not logged!');
@@ -100,43 +94,40 @@ function setup() {
 
 function draw() {
     var login_status = localStorage.getItem('logged');
-    // clear();
-    if (login_status) {
+    if (login_status){
+        clear();
+        draw_upper_buffer();
+        draw_lower_buffer();
+        image(lowerBuffer, 0, 0);
+        image(upperBuffer, 0, 100);
+        drawSprites();
+
         // Add player name as sprite label
-        camera.on();
-        camera.zoom = 2;
         for (let player in players) {
+            
             players[player]['label'] = text(
-                player,
+                players[player]['name'],
                 players[player]['x'] - 15,
                 players[player]['y'] - 18
             );
         };
-        if (players['beelzegoblin']){
-            camera.x = players['beelzegoblin']['sprite'].position.x;
-            camera.y = players['beelzegoblin']['sprite'].position.y;
-            draw_upper_buffer(camera);
-            image(upperBuffer, 0, 100);
-            draw_lower_buffer();
-            image(lowerBuffer, 0, 0);
-            
-            // background('rgba(0,255,0, 0.25)');
-            
-        }
-        drawSprites();
     }
 }
 
 
 function start_game() {
-    var char_id = document.querySelector('input[name="select_char"]:checked').value;
-    var input_data = `{ id: \\\"${char_id}\\\" }`;
+    let char_id = document.querySelector('input[name="select_char"]:checked').value;
+    let area_location = document.getElementById(char_id).getAttribute('value');
+    localStorage.setItem('char_location', area_location);
+    var input_data = `{ id: \\\"${char_id}\\\"}`;
     var token = localStorage.getItem('token');
     character_login_mutation(input_data, `JWT ${token}`).then(data => {
         if (!data['characterLogin']['logStatus']) {
             alert('Failed to log in');
             return;
         }
+        localStorage.setItem('map_size_x', data['mapArea']['sizeX']);
+        localStorage.setItem('map_size_y', data['mapArea']['sizeY']);
         localStorage.setItem('char_id', char_id);
         window.location.href = 'game.html';
     });
