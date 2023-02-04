@@ -112,7 +112,6 @@ function draw() {
             );
         };
         if (players['beelzegoblin']){
-            console.log('>')
             camera.x = players['beelzegoblin']['sprite'].position.x;
             camera.y = players['beelzegoblin']['sprite'].position.y;
             draw_upper_buffer(camera.x, camera.y);
