@@ -18,6 +18,7 @@ function send_logout_request(){
     logout_mutation(user);
 }
 
+
 function sign_up(){
     let newUsername = document.getElementById("newUserName").value;
     let newUserPass = document.getElementById("newUserPassword").value;
@@ -33,6 +34,7 @@ function sign_up(){
     }
 }
 
+
 function send_create_character_request(){
     let token = localStorage.getItem('token');
     let char_name = document.getElementById('char-name-creation').value;
@@ -44,6 +46,5 @@ function send_create_character_request(){
         } else {
             window.location.href = 'character.html';
         }
-    });
-    
+    });   
 }

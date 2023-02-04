@@ -184,20 +184,22 @@ function send_chat_message(message, chat_zone) {
 
 
 function user_characters() {
-    var token = localStorage.getItem('token');
+    // var token = localStorage.getItem('token');
+    let email = localStorage.getItem('email');
+    let payload = `{"query":"query {user(email: \\\"${email}\\\"){ characters{id lv name positionX positionY areaLocation classType} }}"}`;
     return fetch(server_host, {
         "method": "POST",
         "headers": {
             "cookie": "csrftoken=ctJzx1RBM4kTPkPWGpZsBIf3EUY8gr0Td2C4OCeWCsslpyXLYCLpjQGYRlxSfFZP",
             "Content-Type": "application/json",
-            "Authorization": `JWT ${token}`
+            // "Authorization": `JWT ${token}`
         },
-        "body": "{\"query\":\"\\nquery user_chars {\\n\\tuserCharacters{\\n\\t\\tname\\n\\t\\tlogged\\n\\t\\tgoblinClass\\n\\t\\tlv\\n\\t\\tsprite\\n\\t\\tmapArea{\\n\\t\\t\\treference\\n\\t\\t\\tonlineCount\\n\\t\\t}\\n\\t\\tlocation{\\n\\t\\t\\tx\\n\\t\\t\\ty\\n\\t\\t}\\n\\t}\\n}\",\"operationName\":\"user_chars\"}"
+        "body": payload
     })
         .then(json)
         .then(data => {
-            data = data['data']['userCharacters'];
-            fill_characters_panel(data)
+            data = data['data']['user']['characters'];
+            fill_characters_panel(data);
         })
         .catch(err => {
             console.error(err);
