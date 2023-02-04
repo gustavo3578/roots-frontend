@@ -186,7 +186,7 @@ function send_chat_message(message, chat_zone) {
 function user_characters() {
     // var token = localStorage.getItem('token');
     let email = localStorage.getItem('email');
-    let payload = `{"query":"query {user(email: \\\"${email}\\\"){ characters{id lv name positionX positionY areaLocation classType} }}"}`;
+    let payload = `{"query":"query {user(email: \\\"${email}\\\"){username characters{id lv name positionX positionY areaLocation classType} }}"}`;
     return fetch(server_host, {
         "method": "POST",
         "headers": {
@@ -198,6 +198,7 @@ function user_characters() {
     })
         .then(json)
         .then(data => {
+            localStorage.setItem('username', data['data']['user']['username']);
             data = data['data']['user']['characters'];
             fill_characters_panel(data);
         })
@@ -264,7 +265,6 @@ function new_user_sign_up(username, password, email) {
 };
 
 
-
 function query_logged_characters() {
     const payload = `{"query": "query characters{ characters(logged: true){ name logged location{ x y } } }"}`;
     var options = get_request_options(payload);
@@ -283,7 +283,6 @@ function query_logged_characters() {
 
 function create_char_mutation(input_data, token) {
     const payload = `{"query": "mutation create_character{createCharacter(input:${input_data}){character{name}}}"}`;
-    console.log(payload);
     var options = get_request_options(payload);
     options['headers']['Authorization'] = 'JWT ' + token;
     return fetch(server_host, options)
