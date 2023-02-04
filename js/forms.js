@@ -50,3 +50,10 @@ function send_create_character_request(){
         }
     });   
 }
+
+function send_attack_request() {
+    let token = localStorage.getItem('token');
+    let char_name = document.getElementById('char-name-creation').value;
+    let username = localStorage.getItem('username');
+    let user_email = localStorage.getItem('email');
+}
