@@ -54,8 +54,9 @@ label {
     background-color: transparent;
 }
 body {
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-    font-size: 14px;
+    font-family: 'Cinzel';
+    font-size: 22px;
+    font-weight: bold;
     line-height: 1.42857143;
     color: #FFDE8A;
     padding: 50px;
@@ -65,12 +66,14 @@ body {
     color: #350147;
     background-color: lightgreen;
     border-color: lightgreen;
+    border-radius: 2px;
 }
 
 .btn-primary {
     color: #350147;
     background-color: lightgreen;
     border-color: lightgreen;
+    border-radius: 2px;
 }
 
 button, input, optgroup, select, textarea {
