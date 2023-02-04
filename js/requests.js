@@ -70,7 +70,7 @@ function login_mutation(email, password){
         localStorage.setItem('logged', true);
         localStorage.setItem('token', data['data']['logIn']['token']);
         localStorage.setItem('user', email);
-        window.location.href = "../screens/signup.html";
+        window.location.href = "screens/character.html";
     })
     .catch(err => {
         console.error(err);

@@ -5,16 +5,17 @@ let sprite;
 function setup() {
     createCanvas(960, 960);
     draw_back_img();
-    //player();
+    player();
 }
 
 function draw() {
     background(bg);
+    drawSprites();
 }
 
 function preload() {
     bg = loadImage('https://i.ibb.co/b680fpt/Map002.png');
-    player_img = loadImage('https://raw.githubusercontent.com/brunolcarli/Goblins-Client/master/static/img/goblins/goblin.png');
+    sprite = loadImage('https://raw.githubusercontent.com/brunolcarli/Goblins-Client/master/static/img/goblins/goblin.png');
 }
 
 function draw_back_img() {
@@ -22,5 +23,6 @@ function draw_back_img() {
 }
 
 function player() {
-    sprite = new Sprite(player_img, 0, 0, 48, 48, 0);
+    player_img = createSprite(0, 0, 48, 48);
+    player_img.addImage(sprite);
 }

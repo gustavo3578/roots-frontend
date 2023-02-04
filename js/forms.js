@@ -20,6 +20,6 @@ function send_login_request(){
     login_mutation(email, pwd);
 
     if (localStorage.getItem('logged') == true){
-        window.location.href = "screens/signup.html";
+        window.location.href = "screens/character.html";
     }
 }
