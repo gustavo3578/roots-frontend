@@ -266,3 +266,12 @@ function create_char_mutation(input_data, token) {
             console.error(err);
         });
 };
+
+function useSkill(input, token) {
+    const payload = `{"query": "mutation attack{characterUseSkill(input: {skillName: \\\"base_attack\\\", skillUserId: 1, targetId: 2}){result}}}"}`;
+    var options = get_request_options(payload);
+    // options['headers']['Authorization'] = 'JWT' + token;
+    return fetch(server_host, options)
+    .then(json).then(response => {return response['data'];})
+    .catch(err => { console.error(err);});
+};

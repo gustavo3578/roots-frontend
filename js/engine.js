@@ -1,7 +1,7 @@
 let charcter_sprite;
 let images = {};
 let players = {};
-
+let menu = dropdown();
 // Canvas frames
 var upperBuffer;  // game
 var lowerBuffer;  // chat window
@@ -89,6 +89,15 @@ function setup() {
         alert('Not logged!');
         window.location.href = "../index.html";
     }
+    textAlign(CENTER);
+  background(200);
+  sel = createSelect();
+  sel.position(1180, 190);
+  sel.option('pear');
+  sel.option('kiwi');
+  sel.option('grape');
+  sel.selected('kiwi');
+  sel.changed(mySelectEvent);
 }
 
 
@@ -113,6 +122,7 @@ function draw() {
         };
     }
 }
+
 
 
 function start_game() {
