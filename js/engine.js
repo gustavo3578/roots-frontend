@@ -8,6 +8,7 @@ var upperBuffer;  // game
 var lowerBuffer;  // chat window
 
 
+
 function set_players(data) {
     players = {};  // resets the list
     for (let i = 0; i < data.length; i++) {
@@ -15,12 +16,12 @@ function set_players(data) {
             goblin = createSprite(
                 data[i]['location']["x"],
                 data[i]['location']["y"],
-                40, 40);
+                40, 40, 'static');
             goblin.addImage(images['goblin_default']);
             let player_data = {
                 "x": data[i]['location']["x"],
                 "y": data[i]['location']["y"],
-                "sprite": goblin
+                "sprite": goblin,
             }
             players[data[i]['name']] = player_data;
         }
@@ -42,14 +43,14 @@ function preload() {
 }
 
 
-function draw_upper_buffer(x, y) {
+function draw_upper_buffer(camera) {
     /*
     Draws the play screen.
     */
     // upperBuffer.background('rgba(0,255,0, 0.25)');
     // upperBuffer.background(images['forest_bg']);
     // floor = new Sprite(250, 200, 500, 40, 'static');
-    bg = createSprite(x, y, 0, 48, 'static');
+    bg = createSprite(camera.x, camera.y, 500, 40);
     bg.addImage(images['forest_bg']);
 }
 
@@ -115,10 +116,11 @@ function draw() {
             console.log('>')
             camera.x = players['beelzegoblin']['sprite'].position.x;
             camera.y = players['beelzegoblin']['sprite'].position.y;
-            draw_upper_buffer(camera.x, camera.y);
+            draw_upper_buffer(camera);
+            image(upperBuffer, 0, 100);
             draw_lower_buffer();
             image(lowerBuffer, 0, 0);
-            image(upperBuffer, 0, 100);
+            
             // background('rgba(0,255,0, 0.25)');
             
         }

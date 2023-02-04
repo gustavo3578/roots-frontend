@@ -1,5 +1,5 @@
 // const server_host = 'http://localhost:11000/graphql/';
-const server_host = "https://Goblins-Server.brunolcarli.repl.co/graphql/";
+const server_host = "https://ggj23server.brunolcarli.repl.co/graphql/";
 
 
 function status(response) {
@@ -28,41 +28,41 @@ function get_request_options(payload) {
 };
 
 
-function query_entities() {
-    /*
-    Request the entities (elements, objects, players, etc) currently
-    active on the game. Receives a json containing logged users and
-    their position on the map.
-        - Params: None
-        - Return: Object
-    */
-    var token = localStorage.getItem('token');
-    var headers = {
-        "cookie": "csrftoken=9YXcKsPnJSojmIXsjvqlM7TFP0tBfiU8GwVopYDWNKHSQnEUKLnPzJdsCjSb0Cfn",
-        "Content-Type": "application/json",
-        "Authorization": `JWT ${token}`
-    };
-    return fetch(server_host, {
-        "method": "POST",
-        "headers": headers,
-        "body": "{\"query\":\"query{\\n  entities(logged:true){\\n    name\\n    logged\\n    location{\\n      x\\n      y\\n    }\\n  }\\n}\\n\"}"
-    })
-        .then(json)
-        .then(data => {
-            return data['data']['entities'];
-        })
-        .catch(err => {
-            console.error(err);
-        });
-};
+// function query_entities() {
+//     /*
+//     Request the entities (elements, objects, players, etc) currently
+//     active on the game. Receives a json containing logged users and
+//     their position on the map.
+//         - Params: None
+//         - Return: Object
+//     */
+//     var token = localStorage.getItem('token');
+//     var headers = {
+//         "cookie": "csrftoken=9YXcKsPnJSojmIXsjvqlM7TFP0tBfiU8GwVopYDWNKHSQnEUKLnPzJdsCjSb0Cfn",
+//         "Content-Type": "application/json",
+//         "Authorization": `JWT ${token}`
+//     };
+//     return fetch(server_host, {
+//         "method": "POST",
+//         "headers": headers,
+//         "body": "{\"query\":\"query{\\n  entities(logged:true){\\n    name\\n    logged\\n    location{\\n      x\\n      y\\n    }\\n  }\\n}\\n\"}"
+//     })
+//         .then(json)
+//         .then(data => {
+//             return data['data']['entities'];
+//         })
+//         .catch(err => {
+//             console.error(err);
+//         });
+// };
 
 
-function login_mutation(username, password) {
+function login_mutation(email, password) {
     /*
     Request a sign in to the game server. Receives a token to be used
     as session validation on backend requests.
         - Params:
-            + username: string;
+            + email: string;
             + password: string
         - Return: null / undefined
     */
@@ -73,13 +73,17 @@ function login_mutation(username, password) {
             "Content-Type": "application/json",
         },
         "body": `
-        {\"query\":\"mutation{\\n  logIn(input: {username: \\\"${username}\\\" password: \\\"${password}\\\"}){\\n    token\\n  }\\n}\\n\"}`
+        {\"query\":\"mutation{\\n  logIn(input: {email: \\\"${email}\\\" password: \\\"${password}\\\"}){\\n    token\\n  }\\n}\\n\"}`
     })
         .then(json)
         .then(data => {
+            if (data['errors']){
+                alert(data['errors'][0]['message']);
+                return
+            }
             localStorage.setItem('logged', true);
             localStorage.setItem('token', data['data']['logIn']['token']);
-            localStorage.setItem('user', username);
+            localStorage.setItem('email', email);
             window.location.href = "pages/character.html";
         })
         .catch(err => {

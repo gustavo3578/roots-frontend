@@ -1,8 +1,8 @@
 function send_login_request(){
-    var user = document.getElementById("username_input").value
+    var user_email = document.getElementById("email_input").value
     var pwd = document.getElementById("password_input").value
 
-    login_mutation(user, pwd);
+    login_mutation(user_email, pwd);
 
     if (localStorage.getItem('logged') == true){
         window.location.href = "../pages/character.html";
@@ -20,7 +20,7 @@ function send_logout_request(){
 
 function sign_up(){
     let newUsername = document.getElementById("newUserName").value;
-    let newUserPass = document.getElementById("newUserPass").value;
+    let newUserPass = document.getElementById("newUserPassword").value;
     let newUserEmail = document.getElementById("newUserEmail").value;
 
     if (newUsername == null || newUsername == "", newUserPass == null || newUserPass == "", newUserEmail == null || newUserEmail == "") {
