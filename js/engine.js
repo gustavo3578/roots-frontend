@@ -1,7 +1,7 @@
 let goblin;
 let images = {};
 let players = {};
-
+let bg;
 
 // Canvas frames
 var upperBuffer;  // game
@@ -42,12 +42,15 @@ function preload() {
 }
 
 
-function draw_upper_buffer() {
+function draw_upper_buffer(x, y) {
     /*
     Draws the play screen.
     */
     // upperBuffer.background('rgba(0,255,0, 0.25)');
-    upperBuffer.background(images['forest_bg']);
+    // upperBuffer.background(images['forest_bg']);
+    // floor = new Sprite(250, 200, 500, 40, 'static');
+    bg = createSprite(x, y, 0, 48, 'static');
+    bg.addImage(images['forest_bg']);
 }
 
 
@@ -77,11 +80,15 @@ function setup() {
     console.log(login_status);
     if (login_status) {
         console.log('Logged in!');
-        createCanvas(1968, 2744);
+        createCanvas(500, 500);
         upperBuffer = createGraphics(1968, 2744);
         lowerBuffer = createGraphics(1968, 200);
         get_players();
         console.log(players);
+        // draw_upper_buffer();
+        // draw_lower_buffer();
+        // image(lowerBuffer, 0, 0);
+        // image(upperBuffer, 0, 100);
     }
     else {
         alert('Not logged!');
@@ -92,23 +99,30 @@ function setup() {
 
 function draw() {
     var login_status = localStorage.getItem('logged');
+    // clear();
     if (login_status) {
-        draw_upper_buffer();
-        draw_lower_buffer();
-        image(lowerBuffer, 0, 0);
-        image(upperBuffer, 0, 100);
-        // background('rgba(0,255,0, 0.25)');
-        drawSprites();
-
         // Add player name as sprite label
+        camera.on();
+        camera.zoom = 2;
         for (let player in players) {
-
             players[player]['label'] = text(
                 player,
                 players[player]['x'] - 15,
                 players[player]['y'] - 18
             );
         };
+        if (players['beelzegoblin']){
+            console.log('>')
+            camera.x = players['beelzegoblin']['sprite'].position.x;
+            camera.y = players['beelzegoblin']['sprite'].position.y;
+            draw_upper_buffer(camera.x, camera.y);
+            draw_lower_buffer();
+            image(lowerBuffer, 0, 0);
+            image(upperBuffer, 0, 100);
+            // background('rgba(0,255,0, 0.25)');
+            
+        }
+        drawSprites();
     }
 }
 
