@@ -1,15 +1,10 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <!-- 
-        ###################################
-            @Author: Bruno Luvizotto Carli
-            @contact: brunolcarli@gmail.com
-        ###################################
-        -->
        <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- Bootstrap -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../css/styles.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 
@@ -31,8 +26,8 @@
             }
         </style>
     </head>
-    <body>
-        <nav class="navbar navbar-inverse">
+    <body background="../images/bg.png">
+        <!-- <nav class="navbar navbar-inverse">
             <div class="container-fluid">
                 <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -50,38 +45,31 @@
                 </ul>
                 </div>
             </div>
-        </nav>
+        </nav> -->
 
     <div class="jumbotron text-center">
-            <h1>Sign Up</h1>
-            <p>Create an account</p> 
+            <div class="logo">
+                <img src="../images/logo.png" width="100%" height="100%"/>
+            </div>
             </div>
         <div class="well">
-            <div class="text-center">
-                <p class="bg-primary">SIGN UP</p>
-            </div>
-
             <form>
                 <div class="form-group">
-                  <label for="newUserName">Username</label>
-                  <input type="text" class="form-control" id="newUserName" placeholder="Username">
-                </div>
-                <div class="form-group">
-                  <label for="newUserEmails">Email</label>
+                  <label for="newUserEmails">EMAIL:</label>
                   <input type="email" class="form-control" id="newUserEmail" placeholder="Email">
                 </div>
                 <div class="form-group">
-                    <label for="newUserPassword">Password</label>
+                    <label for="newUserPassword">SENHA:</label>
                     <input type="password" class="form-control" id="newUserPassword" placeholder="Password">
                   </div>
             </form>
             <div class="text-center">
-                <button type="input" onCLick="sign_up()" class="btn btn-primary">Create Account</button>
+                <button type="input" onCLick="sign_up()" class="btn btn-primary"><b>ENTRAR</b></button>
             </div>
         </div>
 
         <div class="text-center">
-            Have an account? <a href="../index.html">Login</a>.
+            Ainda não tem uma conta? <a href="../index.html">Crie Uma</a>.
         </div>
 
         <br /><hr />

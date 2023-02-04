@@ -239,14 +239,14 @@ function new_user_sign_up(username, password, email) {
 
 
 function query_logged_characters() {
-    const payload = `{"query": "query characters{ characters(logged: true){ name logged location{ x y } } }"}`;
+    const payload = `{"query": "query characters{ characters(isLogged: true){ name positionX positionY } }"}`;
     var options = get_request_options(payload);
     options['headers']['Authorization'] = 'JWT ' + localStorage.getItem('token');
     return fetch(server_host, options)
         .then(json)
         .then(response => {
             console.log(response);
-            return response['data']['characters'];
+            return response['data'];
         })
         .catch(err => {
             console.error(err);
