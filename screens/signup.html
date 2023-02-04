@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+       <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+    <!--<script src="../js/init.js"></script>-->
+        <script src="../js/forms.js"></script>
+        <script src="../js/requests.js"></script>
+
+        <script src="https://unpkg.com/vue/dist/vue.js"></script>
+        <script src="https://unpkg.com/apollo-client-browser@1.9.0"></script>
+        <script src="https://unpkg.com/vue-apollo@2.1.0-beta.19"></script>
+        <style>
+            .navbar {
+                margin-bottom: 0;
+                border-radius: 0;
+            }
+            li:hover {
+                cursor: pointer;
+            }
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>                        
+                </button>
+                </div>
+                <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="screens/signup.html">Sign Up</a></li>
+                </ul>
+                </div>
+            </div>
+        </nav>
+
+    <div class="jumbotron text-center">
+            <h1>Sign Up</h1>
+            <p>Create an account</p> 
+            </div>
+        <div class="well">
+            <div class="text-center">
+                <p class="bg-primary">SIGN UP</p>
+            </div>
+
+            <form>
+                <div class="form-group">
+                  <label for="newUserName">Username</label>
+                  <input type="text" class="form-control" id="newUserName" placeholder="Username">
+                </div>
+                <div class="form-group">
+                  <label for="newUserPass">Email</label>
+                  <input type="email" class="form-control" id="newUserPass" placeholder="Email">
+                </div>
+                <div class="form-group">
+                    <label for="newUserEmail">Password</label>
+                    <input type="password" class="form-control" id="newUserEmail" placeholder="Password">
+                  </div>
+            </form>
+            <div class="text-center">
+                <button type="input" onCLick="sign_up()" class="btn btn-primary">Create Account</button>
+            </div>
+        </div>
+
+        <div class="text-center">
+            Have an account? <a href="../index.html">Login</a>.
+        </div>
+
+        <br /><hr />
+        <footer class="container-fluid text-center">
+        </footer>
+</html>

@@ -1,0 +1,8 @@
+.login_card {
+    display: flex;
+    justify-content: center;
+}
+
+.sign_up {
+    padding: 20px;
+}
