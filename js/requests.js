@@ -1,5 +1,5 @@
 // const server_host = 'http://localhost:11000/graphql/';
-const server_host = "https://Goblins-Server.brunolcarli.repl.co/graphql/";
+const server_host = "https://ggj23server.brunolcarli.repl.co/graphql/";
 
 
 function status(response) {
@@ -28,41 +28,13 @@ function get_request_options(payload) {
 };
 
 
-function query_entities() {
-    /*
-    Request the entities (elements, objects, players, etc) currently
-    active on the game. Receives a json containing logged users and
-    their position on the map.
-        - Params: None
-        - Return: Object
-    */
-    var token = localStorage.getItem('token');
-    var headers = {
-        "cookie": "csrftoken=9YXcKsPnJSojmIXsjvqlM7TFP0tBfiU8GwVopYDWNKHSQnEUKLnPzJdsCjSb0Cfn",
-        "Content-Type": "application/json",
-        "Authorization": `JWT ${token}`
-    };
-    return fetch(server_host, {
-        "method": "POST",
-        "headers": headers,
-        "body": "{\"query\":\"query{\\n  entities(logged:true){\\n    name\\n    logged\\n    location{\\n      x\\n      y\\n    }\\n  }\\n}\\n\"}"
-    })
-        .then(json)
-        .then(data => {
-            return data['data']['entities'];
-        })
-        .catch(err => {
-            console.error(err);
-        });
-};
 
-
-function login_mutation(username, password) {
+function login_mutation(email, password) {
     /*
     Request a sign in to the game server. Receives a token to be used
     as session validation on backend requests.
         - Params:
-            + username: string;
+            + email: string;
             + password: string
         - Return: null / undefined
     */
@@ -73,13 +45,17 @@ function login_mutation(username, password) {
             "Content-Type": "application/json",
         },
         "body": `
-        {\"query\":\"mutation{\\n  logIn(input: {username: \\\"${username}\\\" password: \\\"${password}\\\"}){\\n    token\\n  }\\n}\\n\"}`
+        {\"query\":\"mutation{\\n  logIn(input: {email: \\\"${email}\\\" password: \\\"${password}\\\"}){\\n    token\\n  }\\n}\\n\"}`
     })
         .then(json)
         .then(data => {
+            if (data['errors']){
+                alert(data['errors'][0]['message']);
+                return
+            }
             localStorage.setItem('logged', true);
             localStorage.setItem('token', data['data']['logIn']['token']);
-            localStorage.setItem('user', username);
+            localStorage.setItem('email', email);
             window.location.href = "pages/character.html";
         })
         .catch(err => {
@@ -180,20 +156,23 @@ function send_chat_message(message, chat_zone) {
 
 
 function user_characters() {
-    var token = localStorage.getItem('token');
+    // var token = localStorage.getItem('token');
+    let email = localStorage.getItem('email');
+    let payload = `{"query":"query {user(email: \\\"${email}\\\"){username characters{id lv name positionX positionY areaLocation classType} }}"}`;
     return fetch(server_host, {
         "method": "POST",
         "headers": {
             "cookie": "csrftoken=ctJzx1RBM4kTPkPWGpZsBIf3EUY8gr0Td2C4OCeWCsslpyXLYCLpjQGYRlxSfFZP",
             "Content-Type": "application/json",
-            "Authorization": `JWT ${token}`
+            // "Authorization": `JWT ${token}`
         },
-        "body": "{\"query\":\"\\nquery user_chars {\\n\\tuserCharacters{\\n\\t\\tname\\n\\t\\tlogged\\n\\t\\tgoblinClass\\n\\t\\tlv\\n\\t\\tsprite\\n\\t\\tmapArea{\\n\\t\\t\\treference\\n\\t\\t\\tonlineCount\\n\\t\\t}\\n\\t\\tlocation{\\n\\t\\t\\tx\\n\\t\\t\\ty\\n\\t\\t}\\n\\t}\\n}\",\"operationName\":\"user_chars\"}"
+        "body": payload
     })
         .then(json)
         .then(data => {
-            data = data['data']['userCharacters'];
-            fill_characters_panel(data)
+            localStorage.setItem('username', data['data']['user']['username']);
+            data = data['data']['user']['characters'];
+            fill_characters_panel(data);
         })
         .catch(err => {
             console.error(err);
@@ -203,9 +182,9 @@ function user_characters() {
 
 function character_login_mutation(input_data, authorization) {
     const query = `characterLogin(input: ${input_data})`;
-    const payload = `{"query": "mutation charLogin{${query}{logStatus{charName logged}}}"}`;
+    const payload = `{"query": "mutation charLogin{${query}{logStatus}}"}`;
     var options = get_request_options(payload);
-    options['headers']['Authorization'] = authorization;
+    // options['headers']['Authorization'] = authorization;
     return fetch(server_host, options)
         .then(json)
         .then(response => {
@@ -234,6 +213,7 @@ function character_logout_mutation(input_data, authorization) {
         });
 };
 
+
 function new_user_sign_up(username, password, email) {
     var payload = `{"query":"mutation{signUp(input: {username: \\\"${username}\\\" password: \\\"${password}\\\" email: \\\"${email}\\\"}){user {username}}}"}`;
     console.log(payload);
@@ -258,7 +238,6 @@ function new_user_sign_up(username, password, email) {
 };
 
 
-
 function query_logged_characters() {
     const payload = `{"query": "query characters{ characters(logged: true){ name logged location{ x y } } }"}`;
     var options = get_request_options(payload);
@@ -277,7 +256,6 @@ function query_logged_characters() {
 
 function create_char_mutation(input_data, token) {
     const payload = `{"query": "mutation create_character{createCharacter(input:${input_data}){character{name}}}"}`;
-    console.log(payload);
     var options = get_request_options(payload);
     options['headers']['Authorization'] = 'JWT ' + token;
     return fetch(server_host, options)
