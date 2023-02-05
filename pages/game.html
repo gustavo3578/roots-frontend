@@ -34,7 +34,6 @@
 
     <script>
         $(document).tooltip({ selector: '[data-toggle="tooltip"]' });
-
         $(document).popover({ selector: '[data-toggle="popover"]' });
     </script>
     <style>
@@ -62,30 +61,42 @@
         </div>
     </nav>
     <main>
-        <!-- Start channel subscription -->
         <script>graphql_subscribe();</script>
-        <!--
-                The main screen is rendered by the P5.js itself
-                on importing the script in the head section above..
-            -->
-        <div>
-            <div style="text-align: left;">
-                <div style="text-align: center;">
-                    <button onclick="moveup()">UP</button><br><br>
-                    <button onclick="moveleft()">LEFT</button>
-                    <button onclick="moveright()">RIGHT</button><br><br>
-                    <button onclick="movedown()">DOWN</button>
-                </div>
-            </div>
 
-            <div style="text-align: right;">
+        <div style="text-align: left;">
+            <div style="text-align: center;">
+                <button onclick="moveup()">UP</button><br><br>
+                <button onclick="moveleft()">LEFT</button>
+                <button onclick="moveright()">RIGHT</button><br><br>
+                <button onclick="movedown()">DOWN</button>
+            </div>
+        </div>
+        <div>
+
+            <!-- <div style="text-align: right;">
                 <input type="text" id="message_input" placeholder="message">
                 <button type="input" onCLick="send_message()">Say</button>
-            </div>
+            </div> -->
 
             <div>
-                <div id="sketch-holder"></div>
-                <div class="card" id="skills" style="display:none">
+                <div class="row" id="canvaAndChat">
+                    <div id="sketch-holder"></div>
+                    <div class="card" id="chat">
+                        <div class="card-body">
+                            <h5 class="card-title">Chat</h5>
+                        </div>
+                        <ul class="list-group list-group-flush overflow-auto h-50" id="ulMessage">
+                        </ul>
+                        <div class="card-body">
+                            <div class="card-footer mt-auto">
+                                <textarea class="form-control" id="message_input" rows="3"></textarea>
+                                <button onCLick="send_message()" class="btn btn-primary mb-2">Say</button>
+                                <button onCLick="ListMessage()" class="btn btn-primary mb-2">Teste</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card" id="skills" style="display:none;border-radius: 0px;">
                     <div class="card-body">
                     </div>
                 </div>
