@@ -1,6 +1,8 @@
 function onCharacterEvent(data){
   let valid_events = {
-    'character_movement': onCharacterMovement
+    'character_movement': onCharacterMovement,
+    'character_login': onCharacterLogIn,
+    'character_logout': onCharacterLogout
   }
   let event_type = data['onCharacterEvent']['characterEvent']['eventType'];
   let event_data = data['onCharacterEvent']['characterEvent']['data'];
@@ -8,8 +10,6 @@ function onCharacterEvent(data){
       valid_events[event_type](event_data);
   }
 }
-
-
 
 
 function onCharacterMovement(data){
@@ -33,30 +33,28 @@ function onCharacterMovement(data){
 // }
 
 
-// function onCharacterLogIn(data){
-//   let payload = data['payload']['data']['onCharacterLogin'];
-//   let player_name = payload['reference'];
+function onCharacterLogIn(data){
+  let player_id = data['id'];
+  goblin = createSprite(data["x"], data["y"], 40, 40);
+  goblin.addImage(images['goblin_default']);
+  let player_data = {
+      "x": data["x"],
+      "y": data["y"],
+      'name': data['name'],
+      "sprite": goblin
+  };
+  players[player_id] = player_data;
+  drawSprites();
+}
 
-//   goblin = createSprite(payload["x"], payload["y"], 40, 40);
-//   goblin.addImage(images['goblin_default']);
-//   let player_data = {
-//       "x": payload["x"],
-//       "y": payload["y"],
-//       "sprite": goblin
-//   };
-//   players[player_name] = player_data;
-//   drawSprites();
-// }
 
-
-// function onCharacterLogout(data){
-//   let payload = data['payload']['data']['onCharacterLogout'];
-//   let player_name = payload['reference'];
-//   let player_sprite = players[player_name].sprite;
-//   removeSprite(player_sprite);
-//   delete players[player_name];
-//   drawSprites();
-// }
+function onCharacterLogout(data){
+  let player_id = data['id'];
+  let player_sprite = players[player_id].sprite;
+  removeSprite(player_sprite);
+  delete players[player_id];
+  drawSprites();
+}
 
 
 
