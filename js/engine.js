@@ -115,37 +115,6 @@ function setup() {
     }
 }
 
-function get_players(map_area) {
-    query_logged_characters(map_area).then((data) => {
-        set_players(data);
-    });
-};
-
-function set_players(data) {
-    data = data['characters'];
-    players = {};  // resets the list
-    for (let i = 0; i < data.length; i++) {
-        if (data[i]['isLogged'] == true) {
-            character_sprite = createSprite(
-                data[i]['positionX'],
-                data[i]['positionY'],
-                40, 40, 'static'
-            );
-
-            character_sprite.addImage(images['character_' + data[i]['classType'] + '_down']);
-            let player_data = {
-                "name": data[i]['name'],
-                "x": data[i]['positionX'],
-                "y": data[i]['positionY'],
-                "sprite": character_sprite,
-                "id": data[i]['id'],
-                'class_type': data[i]['classType']
-            }
-            players[data[i]['id']] = player_data;
-        }
-    }
-}
-
 function MountedLayoutSkill() {
     const skillsPlayer = JSON.parse(localStorage.getItem('skills'))
     if (skillsPlayer != undefined) {
@@ -176,11 +145,43 @@ function draw() {
         for (let player in players) {
             players[player]['label'] = text(
                 players[player]['name'],
-                players[player]['x'] - 15,
-                players[player]['y'] - 18
+                players[player]['x'],
+                players[player]['y']
             );
+            if (mouseIsPressed) {
+                rctl1X = mouseX;
+                rctl1Y = mouseY;
+                checkCollision(rctl1X, rctl1Y, 48, 48, players[player]['x'] - 24, players[player]['y'] - 24, 48, 48);
+                // var collision = checkCollision(rctl1X, rctl1Y, 48, 48, players[player]['x'] - 24, players[player]['y'] - 24, 48, 48);
+                // console.log(collision)
+                // if (collision) {
+                //     fill(255, 0, 0);
+                // } else {
+                //     fill(0, 255, 0);
+                // }
+                // rect(rctl1X, rctl1Y, 48, 48);
+                // rect(players[player]['x'] - 24, players[player]['y'] - 24, 48, 48);
+            }
         };
         // layoutSkills()
+    }
+}
+
+function checkCollision(r1x, r1y, r1w, r1h, r2x, r2y, r2w, r2h) {
+    // store the locations of each rectangles outer borders 
+    var top1 = r1y - r1h / 2;
+    var bottom1 = r1y + r1h / 2;
+    var right1 = r1x + r1w / 2;
+    var left1 = r1x - r1w / 2;
+    var top2 = r2y - r2h / 2;
+    var bottom2 = r2y + r2h / 2;
+    var right2 = r2x + r2w / 2;
+    var left2 = r2x - r2w / 2;
+
+    if (top1 > bottom2 || bottom1 < top2 || right1 < left2 || left1 > right2) {
+        return false;
+    } else {
+        return true;
     }
 }
 
