@@ -56,7 +56,7 @@ function onNewChatMessage(data){
 function onCharacterLogIn(data){
   let player_id = data['id'];
   let character_img = createSprite(data["x"], data["y"], 40, 40, 'static');
-  character_img.addImage(images['character_dps_down']);
+  character_img.addImage(images['character_' + data['classType'] + '_down']);
   let player_data = {
       "x": data["x"],
       "y": data["y"],
