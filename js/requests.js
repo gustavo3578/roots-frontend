@@ -1,4 +1,3 @@
-// const server_host = 'http://localhost:11000/graphql/';
 const server_host = "https://ggj23server.brunolcarli.repl.co/graphql/";
 
 
@@ -49,7 +48,7 @@ function login_mutation(email, password) {
     })
         .then(json)
         .then(data => {
-            if (data['errors']){
+            if (data['errors']) {
                 alert(data['errors'][0]['message']);
                 return
             }
@@ -270,8 +269,8 @@ function create_char_mutation(input_data, token) {
 };
 
 
-function map_area_data_query(area_location){
-    const payload = `{"query": "query map_data{mapArea(name: \\\"${area_location}\\\"){mapArea{name sizeX sizeY connections}}}"}`;
+function map_area_data_query(area_location) {
+    const payload = `{"query": "query map_data{mapArea(name: \\\"${area_location}\\\"){name sizeX sizeY connections}}"}`;
     var options = get_request_options(payload);
     // options['headers']['Authorization'] = 'JWT ' + token;
     return fetch(server_host, options)
@@ -289,6 +288,6 @@ function useSkill(input, token) {
     var options = get_request_options(payload);
     // options['headers']['Authorization'] = 'JWT' + token;
     return fetch(server_host, options)
-    .then(json).then(response => {return response['data'];})
-    .catch(err => { console.error(err);});
+        .then(json).then(response => { return response['data']; })
+        .catch(err => { console.error(err); });
 };
