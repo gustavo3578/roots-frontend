@@ -95,7 +95,7 @@ function setup() {
 
 function draw() {
     var login_status = localStorage.getItem('logged');
-    if (login_status){
+    if (login_status) {
         clear();
         draw_upper_buffer();
         draw_lower_buffer();
@@ -103,7 +103,6 @@ function draw() {
         image(upperBuffer, 1, 100);
         drawSprites();
 
-        // Add player name as sprite label
         for (let player in players) {
             players[player]['label'] = text(
                 players[player]['name'],
@@ -131,9 +130,8 @@ function start_game() {
         map_area_data_query(area_location).then(data => {
             localStorage.setItem('map_size_x', data['mapArea']['sizeX']);
             localStorage.setItem('map_size_y', data['mapArea']['sizeY']);
+            localStorage.setItem('char_id', char_id);
+            window.location.href = 'game.html';
         })
-        
-        localStorage.setItem('char_id', char_id);
-        window.location.href = 'game.html';
     });
 }
