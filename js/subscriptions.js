@@ -1,46 +1,58 @@
+function onCharacterEvent(data){
+  let valid_events = {
+    'character_movement': onCharacterMovement,
+    'character_login': onCharacterLogIn,
+    'character_logout': onCharacterLogout
+  }
+  let event_type = data['onCharacterEvent']['characterEvent']['eventType'];
+  let event_data = data['onCharacterEvent']['characterEvent']['data'];
+  if (event_type in valid_events){
+      valid_events[event_type](event_data);
+  }
+}
+
+
 function onCharacterMovement(data){
-  let payload = data['payload']['data']['onCharacterMovement'];
-  let player_name = payload['reference'];
-  if (player_name in players) {
-      players[player_name]['x'] = payload["x"];
-      players[player_name]['y'] = payload["y"];
-      players[player_name]['sprite'].position.x = payload["x"];
-      players[player_name]['sprite'].position.y = payload["y"];
+  let player_id = data['id'];
+  if (player_id in players) {
+      players[player_id]['x'] = data["x"];
+      players[player_id]['y'] = data["y"];
+      players[player_id]['sprite'].position.x = data["x"];
+      players[player_id]['sprite'].position.y = data["y"];
       drawSprites();
   }
 }
 
-function onNewChatMessage(data){
-  let payload = data['payload']['data']['onNewChatMessage'];
-  chat_logs = chat_logs.concat([payload]);
-  if (chat_logs.length > 5) {
-      chat_logs.shift();
-  }
-}
+
+// function onNewChatMessage(data){
+//   let payload = data['payload']['data']['onNewChatMessage'];
+//   chat_logs = chat_logs.concat([payload]);
+//   if (chat_logs.length > 5) {
+//       chat_logs.shift();
+//   }
+// }
 
 
 function onCharacterLogIn(data){
-  let payload = data['payload']['data']['onCharacterLogin'];
-  let player_name = payload['reference'];
-
-  goblin = createSprite(payload["x"], payload["y"], 40, 40);
-  goblin.addImage(images['goblin_default']);
+  let player_id = data['id'];
+  let character_img = createSprite(data["x"], data["y"], 40, 40, 'static');
+  character_img.addImage(images['character_default']);
   let player_data = {
-      "x": payload["x"],
-      "y": payload["y"],
-      "sprite": goblin
+      "x": data["x"],
+      "y": data["y"],
+      'name': data['name'],
+      "sprite": character_img
   };
-  players[player_name] = player_data;
+  players[player_id] = player_data;
   drawSprites();
 }
 
 
 function onCharacterLogout(data){
-  let payload = data['payload']['data']['onCharacterLogout'];
-  let player_name = payload['reference'];
-  let player_sprite = players[player_name].sprite;
+  let player_id = data['id'];
+  let player_sprite = players[player_id].sprite;
   removeSprite(player_sprite);
-  delete players[player_name];
+  delete players[player_id];
   drawSprites();
 }
 
@@ -48,7 +60,7 @@ function onCharacterLogout(data){
 
 function graphql_subscribe() {
     const client_id = 'client__' + Math.random().toString(16).substr(2, 8);
-    const api_host = 'wss://Goblins-Server.brunolcarli.repl.co/subscriptions/';
+    const api_host = 'wss://ggj23server.brunolcarli.repl.co/subscriptions/';
 
     const GQL = {
         CONNECTION_INIT: 'connection_init',
@@ -62,11 +74,8 @@ function graphql_subscribe() {
         ERROR: 'error',
         COMPLETE: 'complete'
       };
-      const valid_operations = {
-        'onCharacterMovement': onCharacterMovement,
-        'onCharacterLogout': onCharacterLogout,
-        'onCharacterLogin': onCharacterLogIn,
-        'onNewChatMessage': onNewChatMessage
+      const valid_operations = {        
+        'onCharacterEvent': onCharacterEvent
       };
 
       
@@ -76,9 +85,9 @@ function graphql_subscribe() {
         data = JSON.parse(event.data);
         operation = Object.keys(data['payload']['data'])[0];
         package_id = data['id'].toString();
-
+        console.log(data);
         if (operation in valid_operations){
-          valid_operations[operation](data);
+          valid_operations[operation](data['payload']['data']);
         }
       };
 
@@ -88,31 +97,19 @@ function graphql_subscribe() {
         console.log('Subscribing to channels...');
         webSocket.send(JSON.stringify({
           type: GQL.START,
-          id: `${client_id}__movement`,
-          payload: {"query": `subscription ${client_id}__movement {onCharacterMovement{reference x y}}`}
+          id: `${client_id}__character_event`,
+          payload: {"query": `subscription chevt{ onCharacterEvent{ characterEvent{ eventType data } }}`}
         }));
-        console.log('Subscribed to movements channel');
+        console.log('Subscribed to character events channel');
 
-        webSocket.send(JSON.stringify({
-          type: GQL.START,
-          id: `${client_id}__chatmessages`,
-          payload: {"query": `subscription ${client_id}__chatmessages { onNewChatMessage(chatroom: "global") { text sender}}`}
-        }));
-        console.log('Subscribed to chatmessages channel');
+        // webSocket.send(JSON.stringify({
+        //   type: GQL.START,
+        //   id: `${client_id}__characterlogin`,
+        //   payload: {"query": `subscription ${client_id}__characterlogin { onCharacterLogin{reference x y} }`}
+        // }));
+        // console.log('Subscribed to characterlogin channel');
 
-        webSocket.send(JSON.stringify({
-          type: GQL.START,
-          id: `${client_id}__characterlogin`,
-          payload: {"query": `subscription ${client_id}__characterlogin { onCharacterLogin{reference x y} }`}
-        }));
-        console.log('Subscribed to characterlogin channel');
 
-        webSocket.send(JSON.stringify({
-          type: GQL.START,
-          id: `${client_id}__characterlogout`,
-          payload: {"query": `subscription ${client_id}__characterlogout { onCharacterLogout{reference} }`}
-        }));
-        console.log('Subscribed to characterlogout channel');
 
         console.log('Subscriptions completed!');
       };

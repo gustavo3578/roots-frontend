@@ -4,6 +4,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/styles.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 
@@ -15,120 +16,42 @@
     <script src="https://unpkg.com/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/apollo-client-browser@1.9.0"></script>
     <script src="https://unpkg.com/vue-apollo@2.1.0-beta.19"></script>
-    <style>
-        .navbar {
-            margin-bottom: 0;
-            border-radius: 0;
-        }
-
-        li:hover {
-            cursor: pointer;
-        }
-    </style>
+    
 </head>
 
-<body>
-    <nav class="navbar navbar-inverse">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-            </div>
-            <div class="collapse navbar-collapse" id="myNavbar">
-                <ul class="nav navbar-nav">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="pages/signup.html">Sign Up</a></li>
-                    <li><a href="pages/about.html">About</a></li>
-                    <li><a href="pages/developers.html">Developers</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
+<body background="images/bg.png">
     <div class="jumbotron text-center">
-        <h1>Goblins Tactics</h1>
-        <p>Open Source Massive Multiplayer Online</p>
-    </div>
-
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-4">
-                <h3>Characters</h3>
-                <p>
-                    Find more about the game characters, classes and skills.
-                </p>
-
-                <div class="image-box">
-                    <a href="pages/characters.html">
-                        <img src="https://raw.githubusercontent.com/brunolcarli/Goblins-Client/master/static/img/goblins/goblin.png"
-                            class="img-circle">
-                        <img src="https://raw.githubusercontent.com/brunolcarli/Goblins-Client/master/static/img/goblins/goblin.png"
-                            class="img-circle">
-                        <img src="https://raw.githubusercontent.com/brunolcarli/Goblins-Client/master/static/img/goblins/goblin.png"
-                            class="img-circle">
-                        <img src="https://raw.githubusercontent.com/brunolcarli/Goblins-Client/master/static/img/goblins/goblin.png"
-                            class="img-circle">
-                    </a>
-
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <h3>Bug report</h3>
-                <p>Found a bug?</p>
-                <div class="image-box">
-                    <a href="https://github.com/brunolcarli/reponame/issues/new">
-                        <img src="https://raw.githubusercontent.com/brunolcarli/Ants/master/static/img/spider.png"
-                            alt="Bug Report" class="img-circle">
-                    </a>
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <h3>News</h3>
-                <p>Latest news and info</p>
-                <div class="image-box">
-                    <a href="pages/news.html">
-                        <img src="https://raw.githubusercontent.com/brunolcarli/Ants/master/static/img/leaf.png"
-                            alt="Latest news" class="img-circle">
-                    </a>
-                </div>
-            </div>
+        <div class="logo">
+            <img src="images/logo.png" width="100%" height="100%"/>
         </div>
     </div>
-
     <br /><br />
 
     <!-- LOGIN -->
     <div class="well">
-        <div class="text-center">
-            <p class="bg-primary">LOGIN</p>
-        </div>
-
         <form>
             <div class="form-group">
-                <label for="username_input">Username</label>
-                <input type="text" class="form-control" id="username_input" placeholder="Username">
+                <label for="email_input">EMAIL:</label>
+                <input type="text" class="form-control" id="email_input" placeholder="Email">
             </div>
             <div class="form-group">
-                <label for="password_input">Password</label>
+                <label for="password_input">SENHA:</label>
                 <input type="password" class="form-control" id="password_input" placeholder="Password">
             </div>
         </form>
         <div class="text-center">
-            <button type="input" onCLick=send_login_request() class="btn btn-primary">Confirm</button>
+            <button type="input" onCLick=send_login_request() class="btn btn-primary">ENTRAR</button>
         </div>
     </div>
 
     <div class="text-center">
-        Dont have an account? <a href="pages/signup.html">Sign Up</a>.
+        Ainda não tem uma conta? <a href="pages/signup.html">Crie Uma</a>.
     </div>
 
     <br />
     <hr />
     <footer class="container-fluid text-center">
-        <p>Beelzebruno 2021</p>
+        <p>Global Game Jam 2023 2021</p>
     </footer>
 
 </html>

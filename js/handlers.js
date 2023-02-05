@@ -11,47 +11,55 @@ function handle_action(player, input) {
 }
 
 
-function handle_combat(player, input) {
+function handle_combat(player, input){
     console.log("Not implemented");
 }
 
 
-function handle_say(player, input) {
+function handle_say(player, input){
     send_chat_command(player, input.trim());
 }
 
-function keyPressed() {
-    var user = localStorage.getItem('char_name');
-    switch (key) {
-        case 'ArrowLeft':
-        case 'a':
-            handle_action(user, 'move left');
-            break;
 
-        case 'ArrowRight':
-        case 'd':
-            handle_action(user, 'move right');
-            break;
-
-        case 'ArrowUp':
-        case 'w':
-            handle_action(user, 'move up');
-            break;
-
-        case 'ArrowDown':
-        case 's':
-            handle_action(user, 'move down');
-            break;
-
-        default:
-            break;
+function command(){
+    var command_input = document.getElementById('command_input').value;
+    var handlers = {
+        "/": handle_action,
+        ">": handle_combat,
+        "+": handle_say
     }
-    clear();
+    var prefix = command_input[0];
+    var user = localStorage.getItem('char_name');
+
+    if (prefix in handlers){
+        handlers[prefix](user, command_input.replace(prefix, ""));
+    }
 }
 
-function send_message() {
+
+
+// Gambiarra para fim de testes
+function moveup(){
+    var user = localStorage.getItem('char_id');
+    handle_action(user, 'move up');
+}
+function movedown(){
+    var user = localStorage.getItem('char_id');
+    handle_action(user, 'move down');
+}
+function moveleft(){
+    var user = localStorage.getItem('char_id');
+    handle_action(user, 'move left');
+}
+function moveright(){
+    var user = localStorage.getItem('char_id');
+    handle_action(user, 'move right');
+}
+
+
+function send_message(){
     var message_input = document.getElementById('message_input').value;
-    var user = localStorage.getItem('char_name');
-    handle_say(user, message_input);
+    var user = localStorage.getItem('char_id');
+    handle_say(user, message_input);    
 }
 
