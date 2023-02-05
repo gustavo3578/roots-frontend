@@ -9,11 +9,9 @@ function status(response) {
     }
 };
 
-
 function json(response) {
     return response.json()
 };
-
 
 function get_request_options(payload) {
     return {
@@ -25,8 +23,6 @@ function get_request_options(payload) {
         body: payload
     };
 };
-
-
 
 function login_mutation(email, password) {
     /*
@@ -91,7 +87,6 @@ function logout_mutation(username) {
         });
 };
 
-
 function update_position(player, x, y) {
     /*
     Updates player position on the map.
@@ -120,7 +115,6 @@ function update_position(player, x, y) {
             console.error(err);
         });
 };
-
 
 function send_chat_message(message, chat_zone) {
     /*
@@ -154,7 +148,6 @@ function send_chat_message(message, chat_zone) {
         });
 };
 
-
 function user_characters() {
     // var token = localStorage.getItem('token');
     let email = localStorage.getItem('email');
@@ -179,7 +172,6 @@ function user_characters() {
         });
 };
 
-
 function character_login_mutation(input_data, authorization) {
     const query = `characterLogin(input: ${input_data})`;
     const payload = `{"query": "mutation charLogin{${query}{logStatus}}"}`;
@@ -196,7 +188,6 @@ function character_login_mutation(input_data, authorization) {
         });
 };
 
-
 function character_logout_mutation(input_data, authorization) {
     const query = `characterLogout(input: ${input_data})`;
     const payload = `{"query": "mutation charLogout{${query}{logStatus{charName logged}}}"}`;
@@ -212,7 +203,6 @@ function character_logout_mutation(input_data, authorization) {
             console.error(err);
         });
 };
-
 
 function new_user_sign_up(username, password, email) {
     var payload = `{"query":"mutation{signUp(input: {username: \\\"${username}\\\" password: \\\"${password}\\\" email: \\\"${email}\\\"}){user {username}}}"}`;
@@ -237,7 +227,6 @@ function new_user_sign_up(username, password, email) {
         });
 };
 
-
 function query_logged_characters(area_location) {
     const payload = `{"query": "query characters{ characters(isLogged: true areaLocation: \\\"${area_location}\\\"){id name positionX positionY isLogged }} "}`;
     var options = get_request_options(payload);
@@ -251,7 +240,6 @@ function query_logged_characters(area_location) {
             console.error(err);
         });
 };
-
 
 function create_char_mutation(input_data, token) {
     const payload = `{"query": "mutation create_character{createCharacter(input:${input_data}){character{name}}}"}`;
@@ -268,7 +256,6 @@ function create_char_mutation(input_data, token) {
         });
 };
 
-
 function map_area_data_query(area_location) {
     const payload = `{"query": "query map_data{mapArea(name: \\\"${area_location}\\\"){name sizeX sizeY connections}}"}`;
     var options = get_request_options(payload);
@@ -276,13 +263,13 @@ function map_area_data_query(area_location) {
     return fetch(server_host, options)
         .then(json)
         .then(response => {
-            console.log(response);
             return response['data'];
         })
         .catch(err => {
             console.error(err);
         });
 }
+
 function useSkill(input, token) {
     const payload = `{"query": "mutation attack{characterUseSkill(input: {skillName: \\\"base_attack\\\", skillUserId: 1, targetId: 2}){result}}}"}`;
     var options = get_request_options(payload);
@@ -290,4 +277,18 @@ function useSkill(input, token) {
     return fetch(server_host, options)
         .then(json).then(response => { return response['data']; })
         .catch(err => { console.error(err); });
+};
+
+function getSkill(id, token) {
+    const payload = `{"query": "query{ character(id: ${id}) {skills {name spCost power range effect { duration value condition} description classes}}}"}`;
+    var options = get_request_options(payload);
+    // options['headers']['Authorization'] = 'JWT' + token;
+    return fetch(server_host, options)
+        .then(json)
+        .then(response => {
+            return response['data'];
+        })
+        .catch(err => {
+            console.error(err);
+        });
 };
