@@ -35,13 +35,13 @@ function onCharacterMovement(data){
 
 function onCharacterLogIn(data){
   let player_id = data['id'];
-  goblin = createSprite(data["x"], data["y"], 40, 40);
-  goblin.addImage(images['goblin_default']);
+  let character_img = createSprite(data["x"], data["y"], 40, 40, 'static');
+  character_img.addImage(images['character_default']);
   let player_data = {
       "x": data["x"],
       "y": data["y"],
       'name': data['name'],
-      "sprite": goblin
+      "sprite": character_img
   };
   players[player_id] = player_data;
   drawSprites();
