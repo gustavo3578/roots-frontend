@@ -1,13 +1,67 @@
-let character_sprite;
-let images = {};
-let players = {};
+var character_sprite;
+var images = {};
+var players = {};
 
 // Canvas frames
 var upperBuffer;  // game
 var lowerBuffer;  // chat window
 
+
+function set_players(data) {
+    data = data['characters'];
+    players = {};  // resets the list
+    for (let i = 0; i < data.length; i++) {
+        if (data[i]['isLogged'] == true) {
+            character_sprite = createSprite(
+                data[i]['positionX'],
+                data[i]['positionY'],
+                40, 40, 'static'
+            );
+
+            character_sprite.addImage(images['character_' + data[i]['classType'] + '_down']);
+            let player_data = {
+                "name": data[i]['name'],
+                "x": data[i]['positionX'],
+                "y": data[i]['positionY'],
+                "sprite": character_sprite,
+                "id": data[i]['id'],
+                'class_type': data[i]['classType']
+            }
+            players[data[i]['id']] = player_data;
+        }
+    }
+}
+
+
+function get_players(map_area) {
+    query_logged_characters(map_area).then((data) => {
+        set_players(data);
+    });
+};
+
+
 function preload() {
-    images['character_default'] = loadImage('https://raw.githubusercontent.com/brunolcarli/Goblins-Client/master/static/img/goblins/goblin.png');
+    // DPS Sprites
+    images['character_dps_right'] = loadImage('https://i.ibb.co/sVqB43r/direita.png')
+    images['character_dps_left'] = loadImage('https://i.ibb.co/GR0wjNp/esquerda4.png')
+    images['character_dps_up'] = loadImage('https://i.ibb.co/VHKpw1v/tras1.png')
+    images['character_dps_down'] = loadImage('https://i.ibb.co/VDGt9dQ/frente1.png')
+
+    // SUPPORTER Sprites
+    images['character_supporter_right'] = loadImage('https://i.ibb.co/M1GXc66/direita.png')
+    images['character_supporter_left'] = loadImage('https://i.ibb.co/DrH5QsQ/esquerda.png')
+    images['character_supporter_up'] = loadImage('https://i.ibb.co/pbV23dS/tras.png')
+    images['character_supporter_down'] = loadImage('https://i.ibb.co/PYnKjDP/frente.png')
+
+    // TANKER Sprites
+    images['character_tanker_right'] = loadImage('https://i.ibb.co/gdjBG4X/direita.png')
+    images['character_tanker_left'] = loadImage('https://i.ibb.co/bKJbbNg/esquerda.png')
+    images['character_tanker_up'] = loadImage('https://i.ibb.co/H48JGNj/tras1.png')
+    images['character_tanker_down'] = loadImage('https://i.ibb.co/gJXnLzC/frente1.png')
+
+    // ENEMY Sprites
+
+    // Background areas sprites
     images['forest_bg'] = loadImage('https://i.postimg.cc/nhKGBvtK/Map002480.png');
 }
 
@@ -18,7 +72,7 @@ function draw_upper_buffer() {
 function draw_lower_buffer() {
     lowerBuffer.background('rgba(255, 255, 255, 0.25)');
     lowerBuffer.textSize(14);
-    lowerBuffer.text("Chat log:", 0, 10);
+    lowerBuffer.text("Chat log:", 0, 48);
 
     let ty = 25;
     var name;
@@ -113,8 +167,8 @@ function draw() {
         clear();
         draw_upper_buffer();
         draw_lower_buffer();
-        image(lowerBuffer, 0, 48);
-        image(upperBuffer, 0, 100);
+        image(lowerBuffer, 1, 1);
+        image(upperBuffer, 1, 100);
         drawSprites();
 
         for (let player in players) {
