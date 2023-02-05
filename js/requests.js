@@ -115,7 +115,7 @@ function update_position(player, x, y) {
         });
 };
 
-function send_chat_message(message, chat_zone) {
+function send_chat_message(id, message, chat_zone) {
     /*
     Sends a chat message.
     The chat_zone param on the backend is an enum, so the payload
@@ -127,6 +127,7 @@ function send_chat_message(message, chat_zone) {
             + chat_zone: string (ALL CAPS);
         - Return: null | undefined
     */
+    console.log("send_chat_message", id)
     var token = localStorage.getItem('token');
     var headers = {
         "cookie": "csrftoken=9YXcKsPnJSojmIXsjvqlM7TFP0tBfiU8GwVopYDWNKHSQnEUKLnPzJdsCjSb0Cfn",
@@ -136,7 +137,7 @@ function send_chat_message(message, chat_zone) {
     return fetch(server_host, {
         "method": "POST",
         "headers": headers,
-        "body": `{"query": "mutation SendChatMessage{ sendChatMessage(text: \\\"${message}\\\", chatroom: \\\"${chat_zone}\\\"){ ok }}"}`
+        "body": `{"query": "mutation SendChatMessage{ sendChatMessage(id: ${id}, text: \\\"${message}\\\", chatroom: \\\"${chat_zone}\\\"){ ok }}"}`
     })
         .then(json)
         .then(data => {
