@@ -59,7 +59,7 @@ function draw_lower_buffer() {
     */
     lowerBuffer.background('rgba(255, 255, 255, 0.25)');
     lowerBuffer.textSize(14);
-    lowerBuffer.text("Chat log:", 0, 10);
+    lowerBuffer.text("Chat log:", 0, 48);
 
     let ty = 25;
     var name;
@@ -99,8 +99,8 @@ function draw() {
         clear();
         draw_upper_buffer();
         draw_lower_buffer();
-        image(lowerBuffer, 0, 48);
-        image(upperBuffer, 0, 100);
+        image(lowerBuffer, 1, 1);
+        image(upperBuffer, 1, 100);
         drawSprites();
 
         // Add player name as sprite label
