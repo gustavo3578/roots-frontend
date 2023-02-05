@@ -114,7 +114,6 @@ function update_position(player, x, y) {
     })
         .then(json)
         .then(data => {
-            console.log("data", data)
             return data
         })
         .catch(err => {
@@ -148,7 +147,7 @@ function send_chat_message(message, chat_zone) {
     })
         .then(json)
         .then(data => {
-            console.log(data);
+            return data
         })
         .catch(err => {
             console.error(err);
@@ -184,7 +183,7 @@ function user_characters() {
 function character_login_mutation(input_data, authorization) {
     const query = `characterLogin(input: ${input_data})`;
     const payload = `{"query": "mutation charLogin{${query}{logStatus}}"}`;
-    console.log(payload)
+
     var options = get_request_options(payload);
     // options['headers']['Authorization'] = authorization;
     return fetch(server_host, options)
@@ -216,7 +215,6 @@ function character_logout_mutation(input_data, authorization) {
 
 function new_user_sign_up(username, password, email) {
     var payload = `{"query":"mutation{signUp(input: {username: \\\"${username}\\\" password: \\\"${password}\\\" email: \\\"${email}\\\"}){user {username}}}"}`;
-    console.log(payload);
     return fetch(server_host, {
         "method": "POST",
         "headers": {
@@ -227,7 +225,6 @@ function new_user_sign_up(username, password, email) {
     })
         .then(json)
         .then(data => {
-            console.log(data);
             alert("Username registered!!!");
             return data;
             // window.location.href = "pages/character.html";
@@ -260,7 +257,6 @@ function create_char_mutation(input_data, token) {
     return fetch(server_host, options)
         .then(json)
         .then(response => {
-            console.log(response);
             return response['data'];
         })
         .catch(err => {
@@ -276,7 +272,6 @@ function map_area_data_query(area_location){
     return fetch(server_host, options)
         .then(json)
         .then(response => {
-            console.log(response);
             return response['data'];
         })
         .catch(err => {

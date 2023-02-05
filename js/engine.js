@@ -7,16 +7,6 @@ var upperBuffer;  // game
 var lowerBuffer;  // chat window
 
 
-// function spriteshift(cx, cy, nx, ny, class_type){
-//     var sprite_key = 'character_' + class_type;
-//     if (nx > cx){ return sprite_key + '_right' }
-//     if (nx < cx){ return sprite_key + '_left' }
-//     if (ny > cy){ return sprite_key + '_down' }
-//     if (ny < cy){ return sprite_key + '_up' }
-//     return sprite_key + '_down';
-// }
-
-
 function set_players(data) {
     data = data['characters'];
     players = {};  // resets the list
@@ -150,7 +140,7 @@ function draw() {
 
 function start_game() {
     let char_id = document.querySelector('input[name="select_char"]:checked').value;
-    console.log('>>>>', char_id)
+
     let area_location = document.getElementById(char_id).getAttribute('value');
     localStorage.setItem('char_location', area_location);
     var input_data = `{ id: \\\"${char_id}\\\"}`;
