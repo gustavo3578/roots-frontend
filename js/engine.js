@@ -58,10 +58,10 @@ function preload() {
     images['character_dps_down'] = loadImage('https://i.ibb.co/VDGt9dQ/frente1.png')
 
     // SUPPORTER Sprites
-    images['character_supporter_right'] = loadImage('https://i.ibb.co/sVqB43r/direita.png')
-    images['character_supporter_left'] = loadImage('https://i.ibb.co/sVqB43r/direita.png')
-    images['character_supporter_up'] = loadImage('https://i.ibb.co/sVqB43r/direita.png')
-    images['character_supporter_down'] = loadImage('https://i.ibb.co/sVqB43r/direita.png')
+    images['character_supporter_right'] = loadImage('https://i.ibb.co/M1GXc66/direita.png')
+    images['character_supporter_left'] = loadImage('https://i.ibb.co/DrH5QsQ/esquerda.png')
+    images['character_supporter_up'] = loadImage('https://i.ibb.co/pbV23dS/tras.png')
+    images['character_supporter_down'] = loadImage('https://i.ibb.co/PYnKjDP/frente.png')
 
     // TANKER Sprites
     images['character_tanker_right'] = loadImage('https://i.ibb.co/gdjBG4X/direita.png')
