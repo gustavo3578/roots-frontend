@@ -135,13 +135,8 @@ function set_players(data) {
                 data[i]['positionY'],
                 40, 40, 'static'
             );
-<<<<<<< HEAD
-            character_sprite.addImage(images['character_default']);
-
-=======
 
             character_sprite.addImage(images['character_' + data[i]['classType'] + '_down']);
->>>>>>> 9122cec4d53f47a96bac8919fcf325ea93cf9dc9
             let player_data = {
                 "name": data[i]['name'],
                 "x": data[i]['positionX'],
@@ -175,8 +170,6 @@ function MountedLayoutSkill() {
 
 
 function draw() {
-    let playerX;
-    let playerY;
     var login_status = localStorage.getItem('logged');
     if (login_status) {
         clear();
