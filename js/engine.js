@@ -40,49 +40,25 @@ function draw_upper_buffer() {
     upperBuffer.background(images['forest_bg']);
 }
 
-// function draw_lower_buffer() {
-//     lowerBuffer.background('rgba(255, 255, 255, 0.25)');
-//     lowerBuffer.textSize(14);
-//     lowerBuffer.text("Chat log:", 0, 48);
-
-//     let ty = 25;
-//     var name;
-//     var msg;
-//     console.log("chat_logs", chat_logs)
-//     for (let i = 0; i < chat_logs.length; i++) {
-//         name = chat_logs[i]['sender'];
-//         msg = chat_logs[i]['text'];
-//         lowerBuffer.text(`${name}: ${msg}`, 0, ty);
-//         ty ty= ty + 18;
-//     };
-// }
-
 function ListMessage() {
     var name;
     var msg;
+    var idMessage;
 
     for (let i = 0; i < chat_logs.length; i++) {
         name = chat_logs[i]['sender'];
         msg = chat_logs[i]['text'];
         idMessage = chat_logs[i]['id'];
-        console.log("chat_logs[i]", chat_logs[i])
-        if ($("#ulMessage").children().length > 0) {
 
-            $("#ulMessage").each(function (x) {
-                var id = $(this).attr('id');
-                if (id != idMessage) {
-                    InjectMessageInChat(idMessage, name, msg)
-                }
-            });
-        } else {
-            InjectMessageInChat(idMessage, name, msg)
-        }
+        $(`#${idMessage}`).remove();
+        InjectMessageInChat(idMessage, name, msg)
+
     };
 }
 
-function InjectMessageInChat(ty, name, msg) {
+function InjectMessageInChat(idMessage, name, msg) {
     console.log("msg", msg)
-    var html = $(`<li class="list-group-item" id="${ty}">${name}: ${msg}</li>`)
+    var html = $(`<li class="list-group-item" id="${idMessage}">${name}: ${msg}</li>`)
     $("#ulMessage").append(html[0])
 }
 

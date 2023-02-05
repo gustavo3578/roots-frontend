@@ -35,6 +35,10 @@
     <script>
         $(document).tooltip({ selector: '[data-toggle="tooltip"]' });
         $(document).popover({ selector: '[data-toggle="popover"]' });
+        $(document).ready(function () {
+            console.log("aq")
+            setInterval(ListMessage, 800);
+        });
     </script>
     <style>
         li:hover {
@@ -72,12 +76,6 @@
             </div>
         </div>
         <div>
-
-            <!-- <div style="text-align: right;">
-                <input type="text" id="message_input" placeholder="message">
-                <button type="input" onCLick="send_message()">Say</button>
-            </div> -->
-
             <div>
                 <div class="row" id="canvaAndChat">
                     <div id="sketch-holder"></div>
@@ -90,8 +88,7 @@
                         <div class="card-body">
                             <div class="card-footer mt-auto">
                                 <textarea class="form-control" id="message_input" rows="3"></textarea>
-                                <button onCLick="send_message()" class="btn btn-primary mb-2">Say</button>
-                                <button onCLick="ListMessage()" class="btn btn-primary mb-2">Teste</button>
+                                <button type="submit" onCLick="send_message()" class="btn btn-primary mb-2">Say</button>
                             </div>
                         </div>
                     </div>
