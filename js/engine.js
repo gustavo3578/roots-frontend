@@ -132,9 +132,8 @@ function MountedLayoutSkill() {
     const skillsPlayer = JSON.parse(localStorage.getItem('skills'))
     if (skillsPlayer != undefined) {
         const canvas = $("#defaultCanvas0")
-        $("#skills").css("width", `${canvas.outerWidth()}`).css("display", 'block')
+        $("#skills").css("height", `${canvas.outerHeight()}`).css("display", 'block')
         skillsPlayer.forEach(x => {
-            console.log(x)
             var html = $(
                 `<button type="button" class="btn btn-outline-dark" data-toggle="tooltip" data-html="true" data-placement="bottom"
                 title="<span class='badge badge-danger'>Power: ${x.power}</span> <span class='badge badge-info'>Range: ${x.range}</span> <span class='badge badge-warning'>Cost: ${x.spCost}</span>"

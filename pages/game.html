@@ -5,6 +5,7 @@
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
         integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/game.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
@@ -66,19 +67,16 @@
     </nav>
     <main>
         <script>graphql_subscribe();</script>
-
-        <div style="text-align: left;">
-            <div style="text-align: center;">
-                <button onclick="moveup()">UP</button><br><br>
-                <button onclick="moveleft()">LEFT</button>
-                <button onclick="moveright()">RIGHT</button><br><br>
-                <button onclick="movedown()">DOWN</button>
-            </div>
-        </div>
         <div>
             <div>
                 <div class="row" id="canvaAndChat">
                     <div id="sketch-holder"></div>
+                    <div>
+                        <div class="card" id="skills" style="display:none;border-radius: 0px;">
+                            <div class="card-body">
+                            </div>
+                        </div>
+                    </div>
                     <div class="card" id="chat">
                         <div class="card-body">
                             <h5 class="card-title">Chat</h5>
@@ -93,8 +91,26 @@
                         </div>
                     </div>
                 </div>
-                <div class="card" id="skills" style="display:none;border-radius: 0px;">
-                    <div class="card-body">
+                <div class="row">
+                    <div class="col-md-2 col-lg-2 col-sm-12 col-xs-12">
+                        <div class="keyboard">
+                            <div class="top-row">
+                                <div class=" keyboard-control key" onclick="moveup()">
+                                    <p>W</p>
+                                </div>
+                            </div>
+                            <div class="bottom-row">
+                                <div onclick="moveleft()" class="keyboard-control key">
+                                    <p>A</p>
+                                </div>
+                                <div onclick="movedown()" class="keyboard-control key">
+                                    <p>S</p>
+                                </div>
+                                <div onclick="moveright()" class="keyboard-control key">
+                                    <p>D</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
