@@ -1,3 +1,15 @@
+
+
+function spriteshift(cx, cy, nx, ny, class_type){
+  let sprite_key = 'character_' + class_type;
+  if (nx > cx){ return sprite_key + '_right' }
+  if (nx < cx){ return sprite_key + '_left' }
+  if (ny > cy){ return sprite_key + '_down' }
+  if (ny < cy){ return sprite_key + '_up' }
+  return sprite_key + '_down' 
+}
+
+
 function onCharacterEvent(data){
   let valid_events = {
     'character_movement': onCharacterMovement,
@@ -15,8 +27,16 @@ function onCharacterEvent(data){
 function onCharacterMovement(data){
   let player_id = data['id'];
   if (player_id in players) {
+      let sprite_key = spriteshift(
+        players[player_id]['x'],
+        players[player_id]['y'],
+        data["x"],
+        data["y"],
+        players[player_id]['class_type']
+      );
       players[player_id]['x'] = data["x"];
       players[player_id]['y'] = data["y"];
+      players[player_id]['sprite'].addImage(images[sprite_key]);
       players[player_id]['sprite'].position.x = data["x"];
       players[player_id]['sprite'].position.y = data["y"];
       drawSprites();
@@ -36,12 +56,13 @@ function onCharacterMovement(data){
 function onCharacterLogIn(data){
   let player_id = data['id'];
   let character_img = createSprite(data["x"], data["y"], 40, 40, 'static');
-  character_img.addImage(images['character_default']);
+  character_img.addImage(images['character_dps_down']);
   let player_data = {
       "x": data["x"],
       "y": data["y"],
       'name': data['name'],
-      "sprite": character_img
+      "sprite": character_img,
+      'class_type': data['class_type']
   };
   players[player_id] = player_data;
   drawSprites();
@@ -55,7 +76,6 @@ function onCharacterLogout(data){
   delete players[player_id];
   drawSprites();
 }
-
 
 
 function graphql_subscribe() {
@@ -108,8 +128,6 @@ function graphql_subscribe() {
         //   payload: {"query": `subscription ${client_id}__characterlogin { onCharacterLogin{reference x y} }`}
         // }));
         // console.log('Subscribed to characterlogin channel');
-
-
 
         console.log('Subscriptions completed!');
       };

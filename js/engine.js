@@ -17,13 +17,14 @@ function set_players(data) {
                 data[i]['positionY'],
                 40, 40, 'static'
             );
-            character_sprite.addImage(images['character_default']);
+            character_sprite.addImage(images['character_dps_down']);
             let player_data = {
                 "name": data[i]['name'],
                 "x": data[i]['positionX'],
                 "y": data[i]['positionY'],
                 "sprite": character_sprite,
-                "id": data[i]['id']
+                "id": data[i]['id'],
+                'class_type': data[i]['classType']
             }
             players[data[i]['id']] = player_data;
         }
@@ -39,7 +40,27 @@ function get_players(map_area) {
 
 
 function preload() {
-    images['character_default'] = loadImage('https://raw.githubusercontent.com/brunolcarli/Goblins-Client/master/static/img/goblins/goblin.png');
+    // DPS Sprites
+    images['character_dps_right'] = loadImage('https://i.ibb.co/sVqB43r/direita.png')
+    images['character_dps_left'] = loadImage('https://i.ibb.co/GR0wjNp/esquerda4.png')
+    images['character_dps_up'] = loadImage('https://i.ibb.co/VHKpw1v/tras1.png')
+    images['character_dps_down'] = loadImage('https://i.ibb.co/VDGt9dQ/frente1.png')
+
+    // SUPPORTER Sprites
+    images['character_supporter_right'] = loadImage('https://i.ibb.co/sVqB43r/direita.png')
+    images['character_supporter_left'] = loadImage('https://i.ibb.co/sVqB43r/direita.png')
+    images['character_supporter_up'] = loadImage('https://i.ibb.co/sVqB43r/direita.png')
+    images['character_supporter_down'] = loadImage('https://i.ibb.co/sVqB43r/direita.png')
+
+    // TANKER Sprites
+    images['character_tanker_right'] = loadImage('https://i.ibb.co/sVqB43r/direita.png')
+    images['character_tanker_left'] = loadImage('https://i.ibb.co/sVqB43r/direita.png')
+    images['character_tanker_up'] = loadImage('https://i.ibb.co/sVqB43r/direita.png')
+    images['character_tanker_down'] = loadImage('https://i.ibb.co/sVqB43r/direita.png')
+
+    // ENEMY Sprites
+
+    // Background areas sprites
     images['forest_bg'] = loadImage('https://i.postimg.cc/nhKGBvtK/Map002480.png');
     console.log('images loaded');
 }

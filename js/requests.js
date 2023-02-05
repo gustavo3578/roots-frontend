@@ -200,13 +200,12 @@ function character_login_mutation(input_data, authorization) {
 
 function character_logout_mutation(input_data, authorization) {
     const query = `characterLogout(input: ${input_data})`;
-    const payload = `{"query": "mutation charLogout{${query}{logStatus{charName logged}}}"}`;
+    const payload = `{"query": "mutation charLogout{${query}{logStatus}}"}`;
     var options = get_request_options(payload);
     options['headers']['Authorization'] = authorization;
     return fetch(server_host, options)
         .then(json)
         .then(response => {
-            console.log(response);
             return response['data'];
         })
         .catch(err => {
@@ -240,7 +239,7 @@ function new_user_sign_up(username, password, email) {
 
 
 function query_logged_characters(area_location) {
-    const payload = `{"query": "query characters{ characters(isLogged: true areaLocation: \\\"${area_location}\\\"){id name positionX positionY isLogged }} "}`;
+    const payload = `{"query": "query characters{ characters(isLogged: true areaLocation: \\\"${area_location}\\\"){id name positionX positionY isLogged classType}} "}`;
     var options = get_request_options(payload);
     // options['headers']['Authorization'] = 'JWT ' + localStorage.getItem('token');
     return fetch(server_host, options)
