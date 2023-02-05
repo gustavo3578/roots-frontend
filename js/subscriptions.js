@@ -1,3 +1,15 @@
+
+
+function spriteshift(cx, cy, nx, ny, class_type){
+    let sprite_key = 'character_' + class_type;
+    if (nx > cx){ return sprite_key + '_right' }
+    if (nx < cx){ return sprite_key + '_left' }
+    if (ny > cy){ return sprite_key + '_down' }
+    if (ny < cy){ return sprite_key + '_up' }
+    return sprite_key + '_down' 
+}
+
+
 function onCharacterEvent(data){
   let valid_events = {
     'character_movement': onCharacterMovement,
@@ -15,8 +27,16 @@ function onCharacterEvent(data){
 function onCharacterMovement(data){
   let player_id = data['id'];
   if (player_id in players) {
+      let sprite_key = spriteshift(
+        players[player_id]['x'],
+        players[player_id]['y'],
+        data["x"],
+        data["y"],
+        players[player_id]['class_type']
+      );
       players[player_id]['x'] = data["x"];
       players[player_id]['y'] = data["y"];
+      players[player_id]['sprite'].addImage(images[sprite_key]);
       players[player_id]['sprite'].position.x = data["x"];
       players[player_id]['sprite'].position.y = data["y"];
       drawSprites();
@@ -24,24 +44,25 @@ function onCharacterMovement(data){
 }
 
 
-// function onNewChatMessage(data){
-//   let payload = data['payload']['data']['onNewChatMessage'];
-//   chat_logs = chat_logs.concat([payload]);
-//   if (chat_logs.length > 5) {
-//       chat_logs.shift();
-//   }
-// }
+function onNewChatMessage(data){
+  let payload = data['onNewChatMessage'];
+  chat_logs = chat_logs.concat([payload]);
+  if (chat_logs.length > 5) {
+      chat_logs.shift();
+  }
+}
 
 
 function onCharacterLogIn(data){
   let player_id = data['id'];
   let character_img = createSprite(data["x"], data["y"], 40, 40, 'static');
-  character_img.addImage(images['character_default']);
+  character_img.addImage(images['character_' + data['classType'] + '_down']);
   let player_data = {
       "x": data["x"],
       "y": data["y"],
       'name': data['name'],
-      "sprite": character_img
+      "sprite": character_img,
+      'class_type': data['class_type']
   };
   players[player_id] = player_data;
   drawSprites();
@@ -57,10 +78,9 @@ function onCharacterLogout(data){
 }
 
 
-
 function graphql_subscribe() {
     const client_id = 'client__' + Math.random().toString(16).substr(2, 8);
-    const api_host = 'wss://ggj23server.brunolcarli.repl.co/subscriptions/';
+    const subscription_url = 'wss://ggj23server.brunolcarli.repl.co/subscriptions/';
 
     const GQL = {
         CONNECTION_INIT: 'connection_init',
@@ -75,17 +95,17 @@ function graphql_subscribe() {
         COMPLETE: 'complete'
       };
       const valid_operations = {        
-        'onCharacterEvent': onCharacterEvent
+        'onCharacterEvent': onCharacterEvent,
+        'onNewChatMessage': onNewChatMessage
       };
 
       
       console.log('Connecting to broadcaster...');
-      const webSocket = new WebSocket(api_host, "graphql-ws");
+      const webSocket = new WebSocket(subscription_url, "graphql-ws");
       webSocket.onmessage = function(event) {
         data = JSON.parse(event.data);
         operation = Object.keys(data['payload']['data'])[0];
         package_id = data['id'].toString();
-        console.log(data);
         if (operation in valid_operations){
           valid_operations[operation](data['payload']['data']);
         }
@@ -102,47 +122,13 @@ function graphql_subscribe() {
         }));
         console.log('Subscribed to character events channel');
 
-        // webSocket.send(JSON.stringify({
-        //   type: GQL.START,
-        //   id: `${client_id}__characterlogin`,
-        //   payload: {"query": `subscription ${client_id}__characterlogin { onCharacterLogin{reference x y} }`}
-        // }));
-        // console.log('Subscribed to characterlogin channel');
-
-
+        webSocket.send(JSON.stringify({
+          type: GQL.START,
+          id: `${client_id}__message`,
+          payload: {"query": `subscription{onNewChatMessage(chatroom: "global"){sender text}}`}
+        }));
+        console.log('Subscribed to messages channel');
 
         console.log('Subscriptions completed!');
       };
 }
-
-
-// function on_message(msg, topic) {
-//     var out = JSON.parse(msg);
-
-//     // TODO: renomear a fila de posições
-//     if (topic == 'foo/baz'){
-//         let player_name = out["reference"];
-//         if (player_name in players) {
-//             players[player_name]['x'] = out["x"];
-//             players[player_name]['y'] = out["y"];
-//             players[player_name]['sprite'].position.x = out["x"];
-//             players[player_name]['sprite'].position.y = out["y"];
-//             drawSprites();
-//         }
-//     }
-//     else if (topic.includes('log/chat')){
-//         chat_logs = chat_logs.concat([out]);
-//         if (chat_logs.length > 5) {
-//             chat_logs.shift();
-//         }
-//     }
-//     else if (topic == 'system/logged_players'){
-//         set_players(out['data']['entities']);
-//         draw();
-//     }
-//     else if (topic == 'system/logout'){
-//         // Remove unlogged player sprite
-//         players[out['username']]['sprite'].remove();
-//         draw();
-//     }
-// }
