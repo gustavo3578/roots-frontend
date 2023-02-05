@@ -17,7 +17,7 @@ function set_players(data) {
                 data[i]['positionY'],
                 40, 40, 'static'
             );
-            
+
             character_sprite.addImage(images['character_' + data[i]['classType'] + '_down']);
             let player_data = {
                 "name": data[i]['name'],
@@ -63,22 +63,13 @@ function preload() {
 
     // Background areas sprites
     images['forest_bg'] = loadImage('https://i.postimg.cc/nhKGBvtK/Map002480.png');
-    console.log('images loaded');
 }
 
-
 function draw_upper_buffer() {
-    /*
-    Draws the play screen.
-    */
     upperBuffer.background(images['forest_bg']);
 }
 
-
 function draw_lower_buffer() {
-    /*
-    Write messages (draw text) on chat log.
-    */
     lowerBuffer.background('rgba(255, 255, 255, 0.25)');
     lowerBuffer.textSize(14);
     lowerBuffer.text("Chat log:", 0, 48);
@@ -95,18 +86,28 @@ function draw_lower_buffer() {
     };
 }
 
-
 function setup() {
     var login_status = localStorage.getItem('logged');
-    console.log(login_status);
     if (login_status) {
-        console.log('Logged in!');
+
+        //#region Variables
         let size_x = localStorage.getItem('map_size_x');
         let size_y = localStorage.getItem('map_size_y');
-        createCanvas(size_x, size_y);
+        //#endregion
+
+        //#region Canvas 
+        var canva = createCanvas(size_x, size_y);
+        canva.parent('sketch-holder');
+        //#endregion
+
+        //#region Buffers
+
         upperBuffer = createGraphics(size_x, size_y);
         lowerBuffer = createGraphics(size_x, 200);
+        //#endregion
+
         get_players(localStorage.getItem('char_location'));
+        MountedLayoutSkill()
     }
     else {
         alert('Not logged!');
@@ -114,6 +115,51 @@ function setup() {
     }
 }
 
+function get_players(map_area) {
+    query_logged_characters(map_area).then((data) => {
+        set_players(data);
+    });
+};
+
+function set_players(data) {
+    data = data['characters'];
+    players = {};
+    for (let i = 0; i < data.length; i++) {
+        if (data[i]['isLogged'] == true) {
+            character_sprite = createSprite(
+                data[i]['positionX'],
+                data[i]['positionY'],
+                40, 40, 'static'
+            );
+            character_sprite.addImage(images['character_default']);
+            let player_data = {
+                "name": data[i]['name'],
+                "x": data[i]['positionX'],
+                "y": data[i]['positionY'],
+                "sprite": character_sprite,
+                "id": data[i]['id']
+            }
+            players[data[i]['id']] = player_data;
+        }
+    }
+}
+
+function MountedLayoutSkill() {
+    const skillsPlayer = JSON.parse(localStorage.getItem('skills'))
+    if (skillsPlayer != undefined) {
+        const canvas = $("#defaultCanvas0")
+        $("#skills").css("width", `${canvas.outerWidth()}`).css("display", 'block')
+        skillsPlayer.forEach(x => {
+            console.log(x)
+            var html = $(
+                `<button type="button" class="btn btn-outline-dark" data-toggle="tooltip" data-html="true" data-placement="bottom"
+                title="<span class='badge badge-danger'>Power: ${x.power}</span> <span class='badge badge-info'>Range: ${x.range}</span> <span class='badge badge-warning'>Cost: ${x.spCost}</span>"
+                ">${x.name}</button>`);
+
+            $("#skills").children()[0].append(html[0])
+        });
+    }
+}
 
 function draw() {
     var login_status = localStorage.getItem('logged');
@@ -132,14 +178,12 @@ function draw() {
                 players[player]['y'] - 18
             );
         };
+        // layoutSkills()
     }
 }
 
-
-
 function start_game() {
     let char_id = document.querySelector('input[name="select_char"]:checked').value;
-
     let area_location = document.getElementById(char_id).getAttribute('value');
     localStorage.setItem('char_location', area_location);
     var input_data = `{ id: \\\"${char_id}\\\"}`;
@@ -153,7 +197,14 @@ function start_game() {
             localStorage.setItem('map_size_x', data['mapArea']['sizeX']);
             localStorage.setItem('map_size_y', data['mapArea']['sizeY']);
             localStorage.setItem('char_id', char_id);
-            window.location.href = 'game.html';
+        })
+        getSkill(char_id).then(data => {
+            if ('errors' in data) {
+                alert('An error ocurred');
+            } else {
+                localStorage.setItem("skills", JSON.stringify(data['character']['skills']));
+                window.location.href = 'game.html';
+            }
         })
     });
 }

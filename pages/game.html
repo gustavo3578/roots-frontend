@@ -3,14 +3,21 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
 
     <script src="../js/init.js"></script>
 
-    <!-- <script src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.js"></script> -->
-    <!-- <script src="https://cdn.jsdelivr.net/npm/p5@1.5.0/lib/p5.js"></script> -->
     <script src="../js/p5/p5.js"></script>
     <script src="../js/p5.play.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"
@@ -23,7 +30,13 @@
     <script src="../js/requests.js"></script>
     <script src="../js/engine.js"></script>
     <script src="../js/subscriptions.js"></script>
+    <script src="sketch.js"></script>
 
+    <script>
+        $(document).tooltip({ selector: '[data-toggle="tooltip"]' });
+
+        $(document).popover({ selector: '[data-toggle="popover"]' });
+    </script>
     <style>
         li:hover {
             cursor: pointer;
@@ -68,6 +81,14 @@
             <div style="text-align: right;">
                 <input type="text" id="message_input" placeholder="message">
                 <button type="input" onCLick="send_message()">Say</button>
+            </div>
+
+            <div>
+                <div id="sketch-holder"></div>
+                <div class="card" id="skills" style="display:none">
+                    <div class="card-body">
+                    </div>
+                </div>
             </div>
         </div>
 
