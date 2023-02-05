@@ -3,7 +3,6 @@
 function fill_characters_panel(data){
     document.getElementById('chars_panel').innerHTML = '<div class="row" id="chars_panel">'
     for (index in data){
-        console.log(data[index]);
         var character = data[index];
         // <img src="${character['sprite']}" class="img-circle"></img>
         document.getElementById('chars_panel').innerHTML += `

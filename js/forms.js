@@ -12,10 +12,10 @@ function send_login_request(){
 
 function send_logout_request(){
     let token = localStorage.getItem('token');
-    let char_name = localStorage.getItem('char_name');
-    let input_data = `{characterName: \\\"${char_name}\\\"}`;
+    let char_id = localStorage.getItem('char_id');
+    let input_data = `{id: \\\"${char_id}\\\"}`;
     character_logout_mutation(input_data, `JWT ${token}`);
-    logout_mutation(user);
+    window.location.href = "../index.html";
 }
 
 
