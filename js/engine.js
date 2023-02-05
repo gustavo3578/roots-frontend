@@ -99,7 +99,7 @@ function draw() {
         clear();
         draw_upper_buffer();
         draw_lower_buffer();
-        image(lowerBuffer, 0, 0);
+        image(lowerBuffer, 0, 48);
         image(upperBuffer, 0, 100);
         drawSprites();
 
