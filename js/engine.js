@@ -59,6 +59,10 @@ function setup() {
         alert('Not logged!');
         window.location.href = "../index.html";
     }
+    rectMode(CENTER);
+    rctl2X = width / 2;
+    rctl2Y = height / 2;
+
 }
 
 function get_players(map_area) {
@@ -78,6 +82,7 @@ function set_players(data) {
                 40, 40, 'static'
             );
             character_sprite.addImage(images['character_default']);
+
             let player_data = {
                 "name": data[i]['name'],
                 "x": data[i]['positionX'],
@@ -107,7 +112,11 @@ function MountedLayoutSkill() {
     }
 }
 
+
+
 function draw() {
+    let playerX;
+    let playerY;
     var login_status = localStorage.getItem('logged');
     if (login_status) {
         clear();
@@ -121,10 +130,42 @@ function draw() {
             players[player]['label'] = text(
                 players[player]['name'],
                 players[player]['x'] - 15,
-                players[player]['y'] - 18
+                players[player]['y'] - 18,
             );
+            if (mouseIsPressed) {
+                rctl1X = mouseX;
+                rctl1Y = mouseY;
+                // checkCollision(rctl1X, rctl1Y, 48, 48, players[player]['x'] - 15, players[player]['y'] - 18, 48, 48);
+                // var collision = checkCollision(rctl1X, rctl1Y, 48, 48, players[player]['x'] - 15, players[player]['y'] - 18, 48, 48);
+                // console.log(collision)
+                // if (collision) {
+                //     fill(255, 0, 0);
+                // } else {
+                //     fill(0, 255, 0);
+                // }
+                // rect(rctl1X, rctl1Y, 48, 48);
+                // rect(players[player]['x'], players[player]['y'], 48, 48);
+            }
         };
         // layoutSkills()
+    }
+}
+
+function checkCollision(r1x, r1y, r1w, r1h, r2x, r2y, r2w, r2h) {
+    // store the locations of each rectangles outer borders 
+    var top1 = r1y - r1h / 2;
+    var bottom1 = r1y + r1h / 2;
+    var right1 = r1x + r1w / 2;
+    var left1 = r1x - r1w / 2;
+    var top2 = r2y - r2h / 2;
+    var bottom2 = r2y + r2h / 2;
+    var right2 = r2x + r2w / 2;
+    var left2 = r2x - r2w / 2;
+
+    if (top1 > bottom2 || bottom1 < top2 || right1 < left2 || left1 > right2) {
+        return false;
+    } else {
+        return true;
     }
 }
 
