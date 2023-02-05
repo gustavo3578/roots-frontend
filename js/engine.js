@@ -123,7 +123,7 @@ function get_players(map_area) {
 
 function set_players(data) {
     data = data['characters'];
-    players = {};
+    players = {};  // resets the list
     for (let i = 0; i < data.length; i++) {
         if (data[i]['isLogged'] == true) {
             character_sprite = createSprite(
@@ -131,13 +131,15 @@ function set_players(data) {
                 data[i]['positionY'],
                 40, 40, 'static'
             );
-            character_sprite.addImage(images['character_default']);
+
+            character_sprite.addImage(images['character_' + data[i]['classType'] + '_down']);
             let player_data = {
                 "name": data[i]['name'],
                 "x": data[i]['positionX'],
                 "y": data[i]['positionY'],
                 "sprite": character_sprite,
-                "id": data[i]['id']
+                "id": data[i]['id'],
+                'class_type': data[i]['classType']
             }
             players[data[i]['id']] = player_data;
         }
