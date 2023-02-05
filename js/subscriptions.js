@@ -1,12 +1,12 @@
 
 
 function spriteshift(cx, cy, nx, ny, class_type){
-  let sprite_key = 'character_' + class_type;
-  if (nx > cx){ return sprite_key + '_right' }
-  if (nx < cx){ return sprite_key + '_left' }
-  if (ny > cy){ return sprite_key + '_down' }
-  if (ny < cy){ return sprite_key + '_up' }
-  return sprite_key + '_down' 
+    let sprite_key = 'character_' + class_type;
+    if (nx > cx){ return sprite_key + '_right' }
+    if (nx < cx){ return sprite_key + '_left' }
+    if (ny > cy){ return sprite_key + '_down' }
+    if (ny < cy){ return sprite_key + '_up' }
+    return sprite_key + '_down' 
 }
 
 

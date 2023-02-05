@@ -1,10 +1,20 @@
-let character_sprite;
-let images = {};
-let players = {};
+var character_sprite;
+var images = {};
+var players = {};
 
 // Canvas frames
 var upperBuffer;  // game
 var lowerBuffer;  // chat window
+
+
+// function spriteshift(cx, cy, nx, ny, class_type){
+//     var sprite_key = 'character_' + class_type;
+//     if (nx > cx){ return sprite_key + '_right' }
+//     if (nx < cx){ return sprite_key + '_left' }
+//     if (ny > cy){ return sprite_key + '_down' }
+//     if (ny < cy){ return sprite_key + '_up' }
+//     return sprite_key + '_down';
+// }
 
 
 function set_players(data) {
@@ -17,7 +27,8 @@ function set_players(data) {
                 data[i]['positionY'],
                 40, 40, 'static'
             );
-            character_sprite.addImage(images['character_dps_down']);
+            
+            character_sprite.addImage(images['character_' + data[i]['classType'] + '_down']);
             let player_data = {
                 "name": data[i]['name'],
                 "x": data[i]['positionX'],
@@ -53,10 +64,10 @@ function preload() {
     images['character_supporter_down'] = loadImage('https://i.ibb.co/sVqB43r/direita.png')
 
     // TANKER Sprites
-    images['character_tanker_right'] = loadImage('https://i.ibb.co/sVqB43r/direita.png')
-    images['character_tanker_left'] = loadImage('https://i.ibb.co/sVqB43r/direita.png')
-    images['character_tanker_up'] = loadImage('https://i.ibb.co/sVqB43r/direita.png')
-    images['character_tanker_down'] = loadImage('https://i.ibb.co/sVqB43r/direita.png')
+    images['character_tanker_right'] = loadImage('https://i.ibb.co/gdjBG4X/direita.png')
+    images['character_tanker_left'] = loadImage('https://i.ibb.co/bKJbbNg/esquerda.png')
+    images['character_tanker_up'] = loadImage('https://i.ibb.co/H48JGNj/tras1.png')
+    images['character_tanker_down'] = loadImage('https://i.ibb.co/gJXnLzC/frente1.png')
 
     // ENEMY Sprites
 
