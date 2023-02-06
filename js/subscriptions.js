@@ -14,7 +14,8 @@ function onCharacterEvent(data) {
   let valid_events = {
     'character_movement': onCharacterMovement,
     'character_login': onCharacterLogIn,
-    'character_logout': onCharacterLogout
+    'character_logout': onCharacterLogout,
+    'enemy_spawn': onEnemySpawn
   }
   let event_type = data['onCharacterEvent']['characterEvent']['eventType'];
   let event_data = data['onCharacterEvent']['characterEvent']['data'];
@@ -51,6 +52,25 @@ function onNewChatMessage(data) {
   if (chat_logs.length > 5) {
     chat_logs.shift();
   }
+}
+
+
+function onEnemySpawn(data){
+  let current_area = localStorage.getItem('char_location');
+  if (current_area != data['area']){
+    return;
+  }
+  let enemy_id = data['enemy_id'];
+  let enemy_img = createSprite(data["position_x"], data["position_y"], 40, 40, 'static');
+  enemy_img.addImage(images[data['enemy_name']+'_down']);
+  let enemy_data = {
+    "x": data["position_x"],
+    "y": data["position_y"],
+    'name': data['enemy_name'],
+    "sprite": enemy_img,
+  };
+  enemies[enemy_id] = enemy_data;
+  drawSprites();
 }
 
 
