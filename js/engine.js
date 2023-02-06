@@ -30,15 +30,18 @@ function set_players(data) {
     }
 }
 
+
 function get_players(map_area) {
     query_logged_characters(map_area).then((data) => {
         set_players(data);
     });
 };
 
+
 function draw_upper_buffer() {
     upperBuffer.background(images['forest_bg']);
 }
+
 
 function ListMessage() {
     var name;
@@ -56,11 +59,13 @@ function ListMessage() {
     };
 }
 
+
 function InjectMessageInChat(idMessage, name, msg) {
     console.log("msg", msg)
     var html = $(`<li class="list-group-item" id="${idMessage}">${name}: ${msg}</li>`)
     $("#ulMessage").append(html[0])
 }
+
 
 function MountedLayoutSkill() {
     const skillsPlayer = JSON.parse(localStorage.getItem('skills'))
@@ -79,11 +84,13 @@ function MountedLayoutSkill() {
     }
 }
 
+
 function MountedLayoutChat() {
     const canvas = $("#defaultCanvas0")
     $("#chat").css("height", `${canvas.outerHeight()}`).css("display", 'block').css("border-radius", '0px')
 
 }
+
 
 function preload() {
     // DPS Sprites
@@ -110,6 +117,7 @@ function preload() {
     images['forest_bg'] = loadImage('https://i.postimg.cc/nhKGBvtK/Map002480.png');
 }
 
+
 function setup() {
     var login_status = localStorage.getItem('logged');
     if (login_status) {
@@ -128,6 +136,7 @@ function setup() {
     }
 }
 
+
 function MountedLayoutSkill() {
     const skillsPlayer = JSON.parse(localStorage.getItem('skills'))
     if (skillsPlayer != undefined) {
@@ -143,6 +152,7 @@ function MountedLayoutSkill() {
         });
     }
 }
+
 
 function draw() {
     var login_status = localStorage.getItem('logged');
