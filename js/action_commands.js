@@ -10,7 +10,7 @@ function move(player, param){
         'l': (x, y) => {return [x - 48, y]},
         'r': (x, y) => {return [x + 48, y]},
     }
-    console.log(players)
+
     if (param in options) {
         var x = players[player]['x'];
         var y = players[player]['y'];

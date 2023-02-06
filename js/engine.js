@@ -3,6 +3,7 @@ var lowerBuffer;
 var character_sprite;
 var images = {};
 var players = {};
+var enemies = {};
 
 
 function set_players(data) {
@@ -112,6 +113,16 @@ function preload() {
     images['character_tanker_down'] = loadImage('https://i.ibb.co/gJXnLzC/frente1.png')
 
     // ENEMY Sprites
+
+    // Spider
+    images['spider_down'] = loadImage('https://i.ibb.co/ZBTNVvk/spider-front.png')
+
+    // Wolf
+    // TODO: Change this wolf_down to wolf_right when a wolf_down is added
+    images['wolf_down'] = loadImage('https://i.ibb.co/93X6k6s/wolf-right.png')
+
+    // Goblin
+    images['goblin_down'] = loadImage('https://raw.githubusercontent.com/brunolcarli/Goblins-Client/master/static/img/goblins/goblin.png')
 
     // Background areas sprites
     images['forest_bg'] = loadImage('https://i.postimg.cc/nhKGBvtK/Map002480.png');
