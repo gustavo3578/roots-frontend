@@ -67,6 +67,7 @@ function onEnemySpawn(data){
     "x": data["position_x"],
     "y": data["position_y"],
     'name': data['enemy_name'],
+    'area': data['area'],
     "sprite": enemy_img,
   };
   enemies[enemy_id] = enemy_data;
