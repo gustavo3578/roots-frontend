@@ -199,6 +199,30 @@ function MountedLayoutSkill() {
 }
 
 
+function render_hud(){
+    
+    // HP BAR
+    hp_hud = createElement('progress', 'HP');
+    hp_hud.elt.value = 100;
+    hp_hud.elt.max = 100;
+    hp_hud.elt.id = 'HP_HUD';
+    hp_hud.position(20, 28);
+    hp_label = createElement('label', 'HP');
+    hp_label.elt.for = 'HP_HUD';
+    hp_label.position(2, 24);
+
+    // SP BAR
+    sp_hud = createElement('progress', 'SP');
+    sp_hud.elt.value = 100;
+    sp_hud.elt.max = 100;
+    sp_hud.elt.id = 'SP_HUD';
+    sp_hud.position(20, 56);
+    sp_label = createElement('label', 'SP');
+    sp_label.elt.for = 'HS_HUD';
+    sp_label.position(2, 52);
+}
+
+
 function draw() {
     var login_status = localStorage.getItem('logged');
     if (login_status) {
@@ -209,11 +233,16 @@ function draw() {
         image(upperBuffer, 0, 0);
         drawSprites();
 
+        // draw hud
+        render_hud();
+        
+      
+
         for (let player in players) {
             players[player]['label'] = text(
                 players[player]['name'],
                 players[player]['x'],
-                players[player]['y']
+                players[player]['y'] - 10
             );
             if (mouseIsPressed) {
                 rctl1X = mouseX;
