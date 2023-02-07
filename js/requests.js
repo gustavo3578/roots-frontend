@@ -224,7 +224,7 @@ function new_user_sign_up(username, password, email) {
 };
 
 function query_logged_characters(area_location) {
-    const payload = `{"query": "query characters{ characters(isLogged: true areaLocation: \\\"${area_location}\\\"){id name positionX positionY isLogged classType}} "}`;
+    const payload = `{"query": "query characters{ characters(isLogged: true areaLocation: \\\"${area_location}\\\"){id lv maxHp currentHp maxSp currentSp name positionX positionY isLogged classType}} "}`;
     var options = get_request_options(payload);
     // options['headers']['Authorization'] = 'JWT ' + localStorage.getItem('token');
     return fetch(server_host, options)
@@ -265,15 +265,6 @@ function map_area_data_query(area_location) {
         });
 }
 
-function useSkill(input, token) {
-    const payload = `{"query": "mutation attack{characterUseSkill(input: {skillName: \\\"base_attack\\\", skillUserId: 1, targetId: 2}){result}}}"}`;
-    var options = get_request_options(payload);
-    // options['headers']['Authorization'] = 'JWT' + token;
-    return fetch(server_host, options)
-        .then(json).then(response => { return response['data']; })
-        .catch(err => { console.error(err); });
-};
-
 
 function getSkill(id, token) {
     const payload = `{"query": "query{ character(id: ${id}) {skills {name spCost power range effect { duration value condition} description classes}}}"}`;
@@ -303,3 +294,18 @@ function spawned_enemy_query(area_location) {
             console.error(err);
         });
 };
+
+
+function character_use_skill_mutation(input_data){
+    const payload = `{"query": "mutation {characterUseSkill(input:{${input_data}}){result}}"}`;
+    var options = get_request_options(payload);
+    console.log(payload)
+    return fetch(server_host, options)
+        .then(json)
+        .then(response => {
+            return response['data'];
+        })
+        .catch(err => {
+            console.error(err);
+    });
+}

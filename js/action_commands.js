@@ -31,3 +31,12 @@ function move(player, param){
         update_position(player, new_position[0], new_position[1]);
     }
 }
+
+
+function use_skill(skill_name, object) {
+    let skill_user = localStorage.getItem('char_id');
+    let input_data = `skillUserId: ${skill_user} targetId: ${target} skillName: \\\"${skill_name}\\\" classType: \\\"${target_class_type}\\\"`;
+    character_use_skill_mutation(input_data).then(data => {
+        console.log(data);
+    });
+}
