@@ -16,7 +16,10 @@ function onCharacterEvent(data) {
     'character_login': onCharacterLogIn,
     'character_logout': onCharacterLogout,
     'enemy_spawn': onEnemySpawn,
-    'enemy_movement': onEnemyMovement
+    'enemy_movement': onEnemyMovement,
+    'character_use_skill': onCharacterUseSkill,
+    'target_damaged': onTargetDamaged,
+    'target_knockout': onTargetKnockout,
   }
   let event_type = data['onCharacterEvent']['characterEvent']['eventType'];
   let event_data = data['onCharacterEvent']['characterEvent']['data'];
@@ -26,8 +29,39 @@ function onCharacterEvent(data) {
 }
 
 
+function onCharacterUseSkill(data){
+console.log(data);
+}
+
+
+function onTargetDamaged(data){
+  if (data['area'] != data['area']){
+    return;
+  }
+  let damage = data['damage'];
+  let attacker = players[data['skill_user_id']]['name'];
+  let defender = data['target_name'];
+  
+  let attack_log = `${attacker} used ${data['skill_name']} at ${defender}`;
+  let damage_log = `${defender} has taken ${damage} damage`;
+  InjectMessageInChat(0, 'Sys', attack_log);
+  InjectMessageInChat(0, 'Sys', damage_log);
+  
+  players[data['target_id']]['hud'].elt.value = data['target_hp'];
+  localStorage.setItem('current_sp', data['skill_user_sp']);
+
+  if (localStorage.getItem('char_id') == data['target_id']){
+    localStorage.setItem('current_hp', data['target_hp']);
+  }
+
+}
+
+function onTargetKnockout(data){
+  console.log(data);
+}
+
+
 function onCharacterMovement(data) {
-  console.log(data)
   let player_id = data['id'];
   if (player_id in players) {
     let sprite_key = spriteshift(
@@ -37,7 +71,6 @@ function onCharacterMovement(data) {
       data["y"],
       players[player_id]['class_type']
     );
-
 
     players[player_id]['x'] = data["x"];
     players[player_id]['y'] = data["y"];
@@ -52,8 +85,6 @@ function onCharacterMovement(data) {
     players[player_id]['sprite'].mouseClicked(TargetCallback);
     players[player_id]['hud'].position(data['x']-64, data['y']-18);
     players[player_id]['hud_label'].position(data['x'], data['y']-22);
-    // players[player_id]['hud'].hide();
-    // players[player_id]['hud_label'].hide();
   }
 }
 
@@ -91,6 +122,9 @@ function onEnemySpawn(data){
     'id': enemy_id,
     "x": data["position_x"],
     "y": data["position_y"],
+    'lv': data['lv'],
+    'max_hp': data['max_hp'],
+    'current_hp': data['current_hp'],
     'name': data['enemy_name'],
     'area': data['area'],
     "sprite": createImg(
@@ -106,8 +140,8 @@ function onEnemySpawn(data){
 
   enemy_data['hud'] = createElement("progress", 'TGT');
   enemy_data['hud'].elt.id = data['enemy_name'] + ':' + enemy_id;
-  enemy_data['hud'].elt.value = 100;
-  enemy_data['hud'].elt.max = 100;
+  enemy_data['hud'].elt.value = data['current_hp'];
+  enemy_data['hud'].elt.max = data['max_hp'];
   enemy_data['hud_label'] = createElement('label', data['enemy_name']);
   enemy_data['hud_label'].elt.for = enemy_data['hud'].elt.id;
   enemy_data['hud'].position(data['position_x']-64, data['position_y']-16);
@@ -128,6 +162,9 @@ function onCharacterLogIn(data) {
   let player_data = {
     "x": data["x"],
     "y": data["y"],
+    'lv': data['lv'],
+    'max_hp': data['max_hp'],
+    'current_hp': data['current_hp'],
     'name': data['name'],
     "sprite": createImg(
       images['character_' + data['classType'] + '_down'],
@@ -143,8 +180,8 @@ function onCharacterLogIn(data) {
 
   player_data['hud'] = createElement("progress", 'TGT');
   player_data['hud'].elt.id = data['name'] + ':' + player_id;
-  player_data['hud'].elt.value = 100;
-  player_data['hud'].elt.max = 100;
+  player_data['hud'].elt.value = data['current_hp'];
+  player_data['hud'].elt.max = data['max_hp'];
   player_data['hud_label'] = createElement('label', data['name']);
   player_data['hud_label'].elt.for = player_data['hud'].elt.id;
   player_data['hud'].position(data['position_x']-64, data['position_y']-18);
@@ -159,9 +196,8 @@ function onCharacterLogout(data) {
   let player_id = data['id'];
   if (player_id in players){
     let player_sprite = players[player_id].sprite;
-    removeSprite(player_sprite);
+    player_sprite.remove();
     delete players[player_id];
-    drawSprites();
   }
 }
 

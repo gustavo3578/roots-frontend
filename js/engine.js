@@ -113,10 +113,10 @@ function set_spawned_enemies(data){
 
             enemy_data['hud'] = createElement("progress", 'TGT');
             enemy_data['hud'].elt.id = data[i]['name'] + ':' + data[i]['id'];
-            enemy_data['hud'].elt.value = 100;
-            enemy_data['hud'].elt.max = 100;
+            enemy_data['hud'].elt.value = data[i]['currentHp'];
+            enemy_data['hud'].elt.max = data[i]['maxHp'];
             enemy_data['hud'].position(data[i]['positionX']-54, data[i]['positionY']-16);
-            enemy_data['hud_label'] = createElement('label', data[i]['name']);
+            enemy_data['hud_label'] = createElement('label', `Lv: ${data[i]['lv']} ` + data[i]['name']);
             enemy_data['hud_label'].elt.for = enemy_data['hud'].elt.id;
             enemy_data['hud_label'].position(data[i]['positionX'], data[i]['positionY']-20);
             enemy_data['hud'].hide();
@@ -151,9 +151,9 @@ function set_players(data) {
 
             player_data['hud'] = createElement("progress", 'TGT');
             player_data['hud'].elt.id = data[i]['name'] + ':' + data[i]['id'];
-            player_data['hud'].elt.value = 100;
-            player_data['hud'].elt.max = 100;
-            player_data['hud_label'] = createElement('label', data[i]['name']);
+            player_data['hud'].elt.value = data[i]['currentHp'];
+            player_data['hud'].elt.max = data[i]['maxHp'];
+            player_data['hud_label'] = createElement('label', `Lv: ${data[i]['lv']} ` + data[i]['name']);
             player_data['hud_label'].elt.for = player_data['hud'].elt.id ;
             player_data['hud'].position(data[i]['positionX']-64, data[i]['positionY']-18);
             player_data['hud_label'].position(data[i]['positionX'], data[i]['positionY']-22);
@@ -292,7 +292,7 @@ function MountedLayoutSkill() {
         $("#skills").css("height", `${canvas.outerHeight()}`).css("display", 'block')
         skillsPlayer.forEach(x => {
             var html = $(
-                `<button type="button" class="btn btn-outline-dark" data-toggle="tooltip" data-html="true" data-placement="bottom"
+                `<button type="button" onclick="use_skill('${x.name}', this)" class="btn btn-outline-dark" data-toggle="tooltip" data-html="true" data-placement="bottom"
                 title="<span class='badge badge-danger'>Power: ${x.power}</span> <span class='badge badge-info'>Range: ${x.range}</span> <span class='badge badge-warning'>Cost: ${x.spCost}</span>"
                 ">${x.name}</button>`);
 
@@ -306,8 +306,8 @@ function render_hud(){
     
     // HP BAR
     hp_hud = createElement('progress', 'HP');
-    hp_hud.elt.value = 100;
-    hp_hud.elt.max = 100;
+    hp_hud.elt.value = localStorage.getItem('current_hp');
+    hp_hud.elt.max = localStorage.getItem('max_hp');
     hp_hud.elt.id = 'HP_HUD';
     hp_hud.position(20, 26);
     hp_label = createElement('label', 'HP');
@@ -316,8 +316,8 @@ function render_hud(){
 
     // SP BAR
     sp_hud = createElement('progress', 'SP');
-    sp_hud.elt.value = 100;
-    sp_hud.elt.max = 100;
+    sp_hud.elt.value = localStorage.getItem('current_sp');
+    sp_hud.elt.max = localStorage.getItem('max_sp');
     sp_hud.elt.id = 'SP_HUD';
     sp_hud.position(20, 62);
     sp_label = createElement('label', 'SP');
@@ -345,29 +345,9 @@ function draw() {
                 players[player]['y'] - 10
             );
         };
-
-        // check mouse selection
-
     }
 }
 
-function checkCollision(r1x, r1y, r1w, r1h, r2x, r2y, r2w, r2h) {
-    // store the locations of each rectangles outer borders 
-    var top1 = r1y - r1h / 2;
-    var bottom1 = r1y + r1h / 2;
-    var right1 = r1x + r1w / 2;
-    var left1 = r1x - r1w / 2;
-    var top2 = r2y - r2h / 2;
-    var bottom2 = r2y + r2h / 2;
-    var right2 = r2x + r2w / 2;
-    var left2 = r2x - r2w / 2;
-
-    if (top1 > bottom2 || bottom1 < top2 || right1 < left2 || left1 > right2) {
-        return false;
-    } else {
-        return true;
-    }
-}
 
 function start_game() {
     let char_id = document.querySelector('input[name="select_char"]:checked').value;
@@ -376,10 +356,10 @@ function start_game() {
     var input_data = `{ id: \\\"${char_id}\\\"}`;
     var token = localStorage.getItem('token');
     character_login_mutation(input_data, `JWT ${token}`).then(data => {
-        if (!data['characterLogin']['logStatus']) {
+        if (data['errors']) {
             alert('Failed to log in');
-            return;
         }
+        query_character(char_id);
         map_area_data_query(area_location).then(data => {
             localStorage.setItem('map_size_x', data['mapArea']['sizeX']);
             localStorage.setItem('map_size_y', data['mapArea']['sizeY']);
