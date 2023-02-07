@@ -27,6 +27,7 @@ function onCharacterEvent(data) {
 
 
 function onCharacterMovement(data) {
+  console.log(data)
   let player_id = data['id'];
   if (player_id in players) {
     let sprite_key = spriteshift(
@@ -36,12 +37,23 @@ function onCharacterMovement(data) {
       data["y"],
       players[player_id]['class_type']
     );
+
+
     players[player_id]['x'] = data["x"];
     players[player_id]['y'] = data["y"];
-    players[player_id]['sprite'].addImage(images[sprite_key]);
-    players[player_id]['sprite'].position.x = data["x"];
-    players[player_id]['sprite'].position.y = data["y"];
-    drawSprites();
+    players[player_id]['sprite'].remove();
+    players[player_id]['sprite'] = createImg(
+      images[sprite_key],
+      data['name']
+    ),
+    players[player_id]['sprite'].elt.id = player_id;
+    players[player_id]['sprite'].elt.class_type = 'player';
+    players[player_id]['sprite'].position(data["x"], data["y"]);
+    players[player_id]['sprite'].mouseClicked(TargetCallback);
+    players[player_id]['hud'].position(data['x']-64, data['y']-18);
+    players[player_id]['hud_label'].position(data['x'], data['y']-22);
+    // players[player_id]['hud'].hide();
+    // players[player_id]['hud_label'].hide();
   }
 }
 
@@ -49,20 +61,12 @@ function onCharacterMovement(data) {
 function onEnemyMovement(data) {
   let enemy_id = data['enemy_id'];
   if (enemy_id in enemies) {
-    let enemy_name = data['enemy_name'];
-    // let sprite_key = spriteshift(
-    //   players[player_id]['x'],
-    //   players[player_id]['y'],
-    //   data["x"],
-    //   data["y"],
-    //   players[player_id]['class_type']
-    // );
+    // let enemy_name = data['enemy_name'];
     enemies[enemy_id]['x'] = data["position_x"];
-    enemies[enemy_id]['y'] = data["position_x"];
-    enemies[enemy_id]['sprite'].addImage(images[enemy_name+'_down']);
-    enemies[enemy_id]['sprite'].position.x = data["position_x"];
-    enemies[enemy_id]['sprite'].position.y = data["position_x"];
-    drawSprites();
+    enemies[enemy_id]['y'] = data["position_y"];
+    enemies[enemy_id]['sprite'].position(data['position_x'], data['position_y']);
+    enemies[enemy_id]['hud'].position(data['position_x'], data['position_y']-16);
+    enemies[enemy_id]['hud_label'].position(data['position_x'], data['position_y']-20);
   }
 }
 
@@ -83,18 +87,35 @@ function onEnemySpawn(data){
     return;
   }
   let enemy_id = data['enemy_id'];
-  let enemy_img = createSprite(data["position_x"], data["position_y"], 40, 40, 'static');
-  enemy_img.addImage(images[data['enemy_name']+'_down']);
   let enemy_data = {
     'id': enemy_id,
     "x": data["position_x"],
     "y": data["position_y"],
     'name': data['enemy_name'],
     'area': data['area'],
-    "sprite": enemy_img,
+    "sprite": createImg(
+      images[data['enemy_name']+'_down'],
+      data['enemy_name']
+    ),
   };
+
+  enemy_data['sprite'].elt.id = enemy_id;
+  enemy_data['sprite'].elt.class_type = 'enemy';
+  enemy_data['sprite'].position(data["position_x"], data["position_y"]);
+  enemy_data['sprite'].mouseClicked(TargetCallback);
+
+  enemy_data['hud'] = createElement("progress", 'TGT');
+  enemy_data['hud'].elt.id = data['enemy_name'] + ':' + enemy_id;
+  enemy_data['hud'].elt.value = 100;
+  enemy_data['hud'].elt.max = 100;
+  enemy_data['hud_label'] = createElement('label', data['enemy_name']);
+  enemy_data['hud_label'].elt.for = enemy_data['hud'].elt.id;
+  enemy_data['hud'].position(data['position_x']-64, data['position_y']-16);
+  enemy_data['hud_label'].position(data['position_x'], data['position_y']-20);
+  enemy_data['hud'].hide();
+  enemy_data['hud_label'].hide();
+
   enemies[enemy_id] = enemy_data;
-  drawSprites();
 }
 
 
@@ -104,18 +125,33 @@ function onCharacterLogIn(data) {
   }
 
   let player_id = data['id'];
-  let character_img = createSprite(data["x"], data["y"], 40, 40, 'static');
-  character_img.addImage(images['character_' + data['classType'] + '_down']);
   let player_data = {
     "x": data["x"],
     "y": data["y"],
     'name': data['name'],
-    "sprite": character_img,
+    "sprite": createImg(
+      images['character_' + data['classType'] + '_down'],
+      data['name']
+    ),
     'class_type': data['classType'],
     'map_area': data['map_area']
   };
+  player_data['sprite'].elt.id = player_id;
+  player_data['sprite'].elt.class_type = 'player';
+  player_data['sprite'].position(data["position_x"], data["position_y"]);
+  player_data['sprite'].mouseClicked(TargetCallback);
+
+  player_data['hud'] = createElement("progress", 'TGT');
+  player_data['hud'].elt.id = data['name'] + ':' + player_id;
+  player_data['hud'].elt.value = 100;
+  player_data['hud'].elt.max = 100;
+  player_data['hud_label'] = createElement('label', data['name']);
+  player_data['hud_label'].elt.for = player_data['hud'].elt.id;
+  player_data['hud'].position(data['position_x']-64, data['position_y']-18);
+  player_data['hud_label'].position(data['position_x'], data['position_y']-22);
+  player_data['hud'].hide();
+  player_data['hud_label'].hide();
   players[player_id] = player_data;
-  drawSprites();
 }
 
 

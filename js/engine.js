@@ -6,6 +6,84 @@ var images = {};
 var players = {};
 var enemies = {};
 
+let targeting = false;
+let target = null;
+let target_class_type = null;
+
+
+
+function TargetCallback() {
+    // Enemy class type target
+    if (this.elt.class_type == 'enemy' && this.elt.id in enemies){
+        targeting = true;
+        // If already targeting an enemy
+        if (target != this.elt.id && target != null){
+            // untarget current targeted enemy
+            if (target_class_type == 'enemy'){
+                // enemies[target]['sprite'].elt.border = '';
+                enemies[target]['hud'].hide();
+                enemies[target]['hud_label'].hide();
+            }
+            else {
+                // players[target]['sprite'].elt.border = '';
+                players[target]['hud'].hide();
+                players[target]['hud_label'].hide();
+            }
+            target_class_type = 'enemy';
+
+            // refresh target variable with new target id
+            target = this.elt.id;
+
+            // Targets the new target enemy
+            // this.elt.border = '5px solid #555';
+            enemies[target]['hud'].show();
+            enemies[target]['hud_label'].show();
+
+        }
+        else {
+            target = this.elt.id;
+            // this.elt.border = '5px solid #555';
+            enemies[target]['hud'].show();
+            enemies[target]['hud_label'].show();
+            target_class_type = 'enemy';
+        }
+    }
+    // player target
+    else if (this.elt.id in players && this.elt.class_type == 'player'){
+        targeting = true;
+        // If already targeting a player
+        if (target != this.elt.id && target != null){
+            // untarget current target
+            if (target_class_type == 'enemy'){
+                // enemies[target]['sprite'].elt.border = '';
+                enemies[target]['hud'].hide();
+                enemies[target]['hud_label'].hide();
+            }
+            else {
+                // players[target]['sprite'].elt.border = '';
+                players[target]['hud'].hide();
+                players[target]['hud_label'].hide();
+            }
+            target_class_type = 'player';
+
+            // refresh target variable with new target id
+            target = this.elt.id;
+
+            // Targets the new target player
+            // this.elt.border = '5px solid #555';
+            players[target]['hud'].show();
+            players[target]['hud_label'].show();
+        }
+        else {
+            target = this.elt.id;
+            // this.elt.border = '5px solid #555';
+            players[target]['hud'].show();
+            players[target]['hud_label'].show();
+            target_class_type = 'player';
+        }
+    }
+}
+
 
 function set_spawned_enemies(data){
     data = data['enemiesSpawned'];
@@ -13,24 +91,37 @@ function set_spawned_enemies(data){
     enemies = {};
     for (let i = 0; i < data.length; i++) {
         if (data[i]['isKo'] == false && data[i]['areaLocation'] == current_area){
-            enemy_sprite = createSprite(
-                data[i]['positionX'],
-                data[i]['positionY'],
-                40, 40, 'static'
-            );
-            enemy_sprite.addImage(images[data[i]['name'] + '_down']);
             let enemy_data = {
                 "lv": data[i]['lv'],
                 "name": data[i]['name'],
                 "x": data[i]['positionX'],
                 "y": data[i]['positionY'],
-                "sprite": enemy_sprite,
+                "sprite": createImg(
+                    images[data[i]['name'] + '_down'],
+                    data[i]['name']
+                ),
                 "id": data[i]['id'],
                 'class_type': data[i]['classType'],
                 "is_ko": data[i]['isKo'],
                 'current_hp': data[i]['currentHp'],
                 "area": data[i]['areaLocation']
             }
+            enemy_data['sprite'].elt.id = data[i]['id'];
+            enemy_data['sprite'].elt.class_type = data[i]['classType'];
+            enemy_data['sprite'].position(data[i]['positionX'], data[i]['positionY']);
+            enemy_data['sprite'].mouseClicked(TargetCallback);
+
+            enemy_data['hud'] = createElement("progress", 'TGT');
+            enemy_data['hud'].elt.id = data[i]['name'] + ':' + data[i]['id'];
+            enemy_data['hud'].elt.value = 100;
+            enemy_data['hud'].elt.max = 100;
+            enemy_data['hud'].position(data[i]['positionX']-54, data[i]['positionY']-16);
+            enemy_data['hud_label'] = createElement('label', data[i]['name']);
+            enemy_data['hud_label'].elt.for = enemy_data['hud'].elt.id;
+            enemy_data['hud_label'].position(data[i]['positionX'], data[i]['positionY']-20);
+            enemy_data['hud'].hide();
+            enemy_data['hud_label'].hide();
+
             enemies[data[i]['id']] = enemy_data;
         }
     }
@@ -42,21 +133,33 @@ function set_players(data) {
     players = {};
     for (let i = 0; i < data.length; i++) {
         if (data[i]['isLogged'] == true) {
-            character_sprite = createSprite(
-                data[i]['positionX'],
-                data[i]['positionY'],
-                40, 40, 'static'
-            );
-
-            character_sprite.addImage(images['character_' + data[i]['classType'] + '_down']);
             let player_data = {
                 "name": data[i]['name'],
                 "x": data[i]['positionX'],
                 "y": data[i]['positionY'],
-                "sprite": character_sprite,
+                "sprite": createImg(
+                    images['character_' + data[i]['classType'] + '_down'],
+                    data[i]['name']
+                ),
                 "id": data[i]['id'],
-                'class_type': data[i]['classType']
+                'class_type': data[i]['classType'],
             }
+            player_data['sprite'].elt.id = data[i]['id'];
+            player_data['sprite'].elt.class_type = 'player';
+            player_data['sprite'].position(data[i]['positionX'], data[i]['positionY']);
+            player_data['sprite'].mouseClicked(TargetCallback);
+
+            player_data['hud'] = createElement("progress", 'TGT');
+            player_data['hud'].elt.id = data[i]['name'] + ':' + data[i]['id'];
+            player_data['hud'].elt.value = 100;
+            player_data['hud'].elt.max = 100;
+            player_data['hud_label'] = createElement('label', data[i]['name']);
+            player_data['hud_label'].elt.for = player_data['hud'].elt.id ;
+            player_data['hud'].position(data[i]['positionX']-64, data[i]['positionY']-18);
+            player_data['hud_label'].position(data[i]['positionX'], data[i]['positionY']-22);
+            player_data['hud'].hide();
+            player_data['hud_label'].hide();
+
             players[data[i]['id']] = player_data;
         }
     }
@@ -126,36 +229,36 @@ function MountedLayoutChat() {
 
 function preload() {
     // DPS Sprites
-    images['character_dps_right'] = loadImage('https://i.ibb.co/sVqB43r/direita.png')
-    images['character_dps_left'] = loadImage('https://i.ibb.co/GR0wjNp/esquerda4.png')
-    images['character_dps_up'] = loadImage('https://i.ibb.co/VHKpw1v/tras1.png')
-    images['character_dps_down'] = loadImage('https://i.ibb.co/VDGt9dQ/frente1.png')
+    images['character_dps_right'] = 'https://i.ibb.co/sVqB43r/direita.png';
+    images['character_dps_left'] = 'https://i.ibb.co/GR0wjNp/esquerda4.png';
+    images['character_dps_up'] = 'https://i.ibb.co/VHKpw1v/tras1.png';
+    images['character_dps_down'] = 'https://i.ibb.co/VDGt9dQ/frente1.png';
 
     // SUPPORTER Sprites
-    images['character_supporter_right'] = loadImage('https://i.ibb.co/M1GXc66/direita.png')
-    images['character_supporter_left'] = loadImage('https://i.ibb.co/DrH5QsQ/esquerda.png')
-    images['character_supporter_up'] = loadImage('https://i.ibb.co/pbV23dS/tras.png')
-    images['character_supporter_down'] = loadImage('https://i.ibb.co/PYnKjDP/frente.png')
+    images['character_supporter_right'] = 'https://i.ibb.co/M1GXc66/direita.png';
+    images['character_supporter_left'] = 'https://i.ibb.co/DrH5QsQ/esquerda.png';
+    images['character_supporter_up'] = 'https://i.ibb.co/pbV23dS/tras.png';
+    images['character_supporter_down'] = 'https://i.ibb.co/PYnKjDP/frente.png';
 
     // TANKER Sprites
-    images['character_tanker_right'] = loadImage('https://i.ibb.co/gdjBG4X/direita.png')
-    images['character_tanker_left'] = loadImage('https://i.ibb.co/bKJbbNg/esquerda.png')
-    images['character_tanker_up'] = loadImage('https://i.ibb.co/H48JGNj/tras1.png')
-    images['character_tanker_down'] = loadImage('https://i.ibb.co/gJXnLzC/frente1.png')
+    images['character_tanker_right'] = 'https://i.ibb.co/gdjBG4X/direita.png';
+    images['character_tanker_left'] = 'https://i.ibb.co/bKJbbNg/esquerda.png';
+    images['character_tanker_up'] = 'https://i.ibb.co/H48JGNj/tras1.png';
+    images['character_tanker_down'] = 'https://i.ibb.co/gJXnLzC/frente1.png';
 
     // ENEMY Sprites
 
     // Spider
-    images['spider_down'] = loadImage('https://i.ibb.co/ZBTNVvk/spider-front.png')
+    images['spider_down'] = 'https://i.ibb.co/ZBTNVvk/spider-front.png';
 
     // Wolf
     // TODO: Change this wolf_down to wolf_right when a wolf_down is added
-    images['wolf_down'] = loadImage('https://i.ibb.co/93X6k6s/wolf-right.png')
+    images['wolf_down'] = 'https://i.ibb.co/93X6k6s/wolf-right.png';
 
     // Goblin
-    images['goblin_down'] = loadImage('https://raw.githubusercontent.com/brunolcarli/Goblins-Client/master/static/img/goblins/goblin.png')
+    images['goblin_down'] = 'https://raw.githubusercontent.com/brunolcarli/Goblins-Client/master/static/img/goblins/goblin.png';
 
-    // Background areas sprites
+    // Background area sprites
     images['forest_bg'] = loadImage('https://i.postimg.cc/nhKGBvtK/Map002480.png');
 }
 
@@ -206,20 +309,20 @@ function render_hud(){
     hp_hud.elt.value = 100;
     hp_hud.elt.max = 100;
     hp_hud.elt.id = 'HP_HUD';
-    hp_hud.position(20, 28);
+    hp_hud.position(20, 26);
     hp_label = createElement('label', 'HP');
     hp_label.elt.for = 'HP_HUD';
-    hp_label.position(2, 24);
+    hp_label.position(2, 26);
 
     // SP BAR
     sp_hud = createElement('progress', 'SP');
     sp_hud.elt.value = 100;
     sp_hud.elt.max = 100;
     sp_hud.elt.id = 'SP_HUD';
-    sp_hud.position(20, 56);
+    sp_hud.position(20, 62);
     sp_label = createElement('label', 'SP');
-    sp_label.elt.for = 'HS_HUD';
-    sp_label.position(2, 52);
+    sp_label.elt.for = 'SP_HUD';
+    sp_label.position(2, 62);
 }
 
 
@@ -228,37 +331,23 @@ function draw() {
     if (login_status) {
         clear();
         draw_upper_buffer();
-        // draw_lower_buffer();
-        // image(lowerBuffer, 1, 1);
         image(upperBuffer, 0, 0);
         drawSprites();
 
         // draw hud
         render_hud();
-        
-      
 
+        // draw player names
         for (let player in players) {
             players[player]['label'] = text(
                 players[player]['name'],
                 players[player]['x'],
                 players[player]['y'] - 10
             );
-            if (mouseIsPressed) {
-                rctl1X = mouseX;
-                rctl1Y = mouseY;
-                checkCollision(rctl1X, rctl1Y, 48, 48, players[player]['x'] - 24, players[player]['y'] - 24, 48, 48);
-                // var collision = checkCollision(rctl1X, rctl1Y, 48, 48, players[player]['x'] - 24, players[player]['y'] - 24, 48, 48);
-                // console.log(collision)
-                // if (collision) {
-                //     fill(255, 0, 0);
-                // } else {
-                //     fill(0, 255, 0);
-                // }
-                // rect(rctl1X, rctl1Y, 48, 48);
-                // rect(players[player]['x'] - 24, players[player]['y'] - 24, 48, 48);
-            }
         };
+
+        // check mouse selection
+
     }
 }
 
