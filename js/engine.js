@@ -161,13 +161,6 @@ function set_players(data) {
             player_data['hud_label'].hide();
 
             players[data[i]['id']] = player_data;
-
-            if (data[i]['id'] == localStorage.getItem('char_id')){
-                localStorage.setItem('max_hp', data['maxHp']);
-                localStorage.setItem('max_sp', data['maxSp']);
-                localStorage.setItem('current_hp', data['currentHp']);
-                localStorage.setItem('current_sp', data['currentSp']);
-            }
         }
     }
 }
@@ -363,10 +356,10 @@ function start_game() {
     var input_data = `{ id: \\\"${char_id}\\\"}`;
     var token = localStorage.getItem('token');
     character_login_mutation(input_data, `JWT ${token}`).then(data => {
-        if (!data['characterLogin']['logStatus']) {
+        if (data['errors']) {
             alert('Failed to log in');
-            return;
         }
+        query_character(char_id);
         map_area_data_query(area_location).then(data => {
             localStorage.setItem('map_size_x', data['mapArea']['sizeX']);
             localStorage.setItem('map_size_y', data['mapArea']['sizeY']);

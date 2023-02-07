@@ -157,12 +157,6 @@ function onCharacterLogIn(data) {
   if (data['map_area'] != localStorage.getItem('char_location')){
     return;
   }
-  if (data['id'] == localStorage.getItem('char_id')){
-    localStorage.setItem('max_hp', data['max_hp']);
-    localStorage.setItem('max_sp', data['max_sp']);
-    localStorage.setItem('current_hp', data['current_hp']);
-    localStorage.setItem('current_sp', data['current_sp']);
-  }
 
   let player_id = data['id'];
   let player_data = {
