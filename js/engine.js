@@ -6,6 +6,11 @@ var players = {};
 var enemies = {};
 
 
+function set_spawned_enemies(data){
+    console.log(data);
+}
+
+
 function set_players(data) {
     data = data['characters'];
     players = {};
@@ -232,7 +237,10 @@ function start_game() {
             localStorage.setItem('map_size_x', data['mapArea']['sizeX']);
             localStorage.setItem('map_size_y', data['mapArea']['sizeY']);
             localStorage.setItem('char_id', char_id);
-        })
+        });
+        spawned_enemy_query(area_location).then(data => {
+            set_spawned_enemies(data);
+        });
         getSkill(char_id).then(data => {
             if ('errors' in data) {
                 alert('An error ocurred');
