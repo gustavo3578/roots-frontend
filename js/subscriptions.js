@@ -15,7 +15,8 @@ function onCharacterEvent(data) {
     'character_movement': onCharacterMovement,
     'character_login': onCharacterLogIn,
     'character_logout': onCharacterLogout,
-    'enemy_spawn': onEnemySpawn
+    'enemy_spawn': onEnemySpawn,
+    'enemy_movement': onEnemyMovement
   }
   let event_type = data['onCharacterEvent']['characterEvent']['eventType'];
   let event_data = data['onCharacterEvent']['characterEvent']['data'];
@@ -40,6 +41,27 @@ function onCharacterMovement(data) {
     players[player_id]['sprite'].addImage(images[sprite_key]);
     players[player_id]['sprite'].position.x = data["x"];
     players[player_id]['sprite'].position.y = data["y"];
+    drawSprites();
+  }
+}
+
+
+function onEnemyMovement(data) {
+  let enemy_id = data['enemy_id'];
+  if (enemy_id in enemies) {
+    let enemy_name = data['enemy_name'];
+    // let sprite_key = spriteshift(
+    //   players[player_id]['x'],
+    //   players[player_id]['y'],
+    //   data["x"],
+    //   data["y"],
+    //   players[player_id]['class_type']
+    // );
+    enemies[enemy_id]['x'] = data["position_x"];
+    enemies[enemy_id]['y'] = data["position_x"];
+    enemies[enemy_id]['sprite'].addImage(images[enemy_name+'_down']);
+    enemies[enemy_id]['sprite'].position.x = data["position_x"];
+    enemies[enemy_id]['sprite'].position.y = data["position_x"];
     drawSprites();
   }
 }
