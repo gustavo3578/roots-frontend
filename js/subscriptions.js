@@ -64,6 +64,7 @@ function onEnemySpawn(data){
   let enemy_img = createSprite(data["position_x"], data["position_y"], 40, 40, 'static');
   enemy_img.addImage(images[data['enemy_name']+'_down']);
   let enemy_data = {
+    'id': enemy_id,
     "x": data["position_x"],
     "y": data["position_y"],
     'name': data['enemy_name'],
@@ -76,6 +77,10 @@ function onEnemySpawn(data){
 
 
 function onCharacterLogIn(data) {
+  if (data['map_area'] != localStorage.getItem('char_location')){
+    return;
+  }
+
   let player_id = data['id'];
   let character_img = createSprite(data["x"], data["y"], 40, 40, 'static');
   character_img.addImage(images['character_' + data['classType'] + '_down']);
@@ -84,7 +89,8 @@ function onCharacterLogIn(data) {
     "y": data["y"],
     'name': data['name'],
     "sprite": character_img,
-    'class_type': data['class_type']
+    'class_type': data['classType'],
+    'map_area': data['map_area']
   };
   players[player_id] = player_data;
   drawSprites();
@@ -93,10 +99,12 @@ function onCharacterLogIn(data) {
 
 function onCharacterLogout(data) {
   let player_id = data['id'];
-  let player_sprite = players[player_id].sprite;
-  removeSprite(player_sprite);
-  delete players[player_id];
-  drawSprites();
+  if (player_id in players){
+    let player_sprite = players[player_id].sprite;
+    removeSprite(player_sprite);
+    delete players[player_id];
+    drawSprites();
+  }
 }
 
 

@@ -274,8 +274,24 @@ function useSkill(input, token) {
         .catch(err => { console.error(err); });
 };
 
+
 function getSkill(id, token) {
     const payload = `{"query": "query{ character(id: ${id}) {skills {name spCost power range effect { duration value condition} description classes}}}"}`;
+    var options = get_request_options(payload);
+    // options['headers']['Authorization'] = 'JWT' + token;
+    return fetch(server_host, options)
+        .then(json)
+        .then(response => {
+            return response['data'];
+        })
+        .catch(err => {
+            console.error(err);
+        });
+};
+
+
+function spawned_enemy_query(area_location) {
+    const payload = `{"query": "query{enemiesSpawned(areaLocation: \\\"${area_location}\\\") { id lv name maxHp currentHp classType positionX positionY isKo areaLocation }}"}`;
     var options = get_request_options(payload);
     // options['headers']['Authorization'] = 'JWT' + token;
     return fetch(server_host, options)
