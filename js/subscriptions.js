@@ -64,6 +64,7 @@ function onEnemySpawn(data){
   let enemy_img = createSprite(data["position_x"], data["position_y"], 40, 40, 'static');
   enemy_img.addImage(images[data['enemy_name']+'_down']);
   let enemy_data = {
+    'id': enemy_id,
     "x": data["position_x"],
     "y": data["position_y"],
     'name': data['enemy_name'],

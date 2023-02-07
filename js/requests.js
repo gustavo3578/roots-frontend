@@ -291,7 +291,7 @@ function getSkill(id, token) {
 
 
 function spawned_enemy_query(area_location) {
-    const payload = `{"query": "query{enemiesSpawned(areaLocation: \\\"${area_location}\\\") { lv name maxHp currentHp classType positionX positionY isKo areaLocation }}"}`;
+    const payload = `{"query": "query{enemiesSpawned(areaLocation: \\\"${area_location}\\\") { id lv name maxHp currentHp classType positionX positionY isKo areaLocation }}"}`;
     var options = get_request_options(payload);
     // options['headers']['Authorization'] = 'JWT' + token;
     return fetch(server_host, options)

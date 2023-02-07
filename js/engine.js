@@ -1,13 +1,39 @@
 var upperBuffer;
 var lowerBuffer;
 var character_sprite;
+var enemy_sprite;
 var images = {};
 var players = {};
 var enemies = {};
 
 
 function set_spawned_enemies(data){
-    console.log(data);
+    data = data['enemiesSpawned'];
+    let current_area = localStorage.getItem('char_location');
+    enemies = {};
+    for (let i = 0; i < data.length; i++) {
+        if (data[i]['isKo'] == false && data[i]['areaLocation'] == current_area){
+            enemy_sprite = createSprite(
+                data[i]['positionX'],
+                data[i]['positionY'],
+                40, 40, 'static'
+            );
+            enemy_sprite.addImage(images[data[i]['name'] + '_down']);
+            let enemy_data = {
+                "lv": data[i]['lv'],
+                "name": data[i]['name'],
+                "x": data[i]['positionX'],
+                "y": data[i]['positionY'],
+                "sprite": enemy_sprite,
+                "id": data[i]['id'],
+                'class_type': data[i]['classType'],
+                "is_ko": data[i]['isKo'],
+                'current_hp': data[i]['currentHp'],
+                "area": data[i]['areaLocation']
+            }
+            enemies[data[i]['id']] = enemy_data;
+        }
+    }
 }
 
 
@@ -145,6 +171,9 @@ function setup() {
         get_players(localStorage.getItem('char_location'));
         MountedLayoutSkill()
         MountedLayoutChat()
+        spawned_enemy_query(localStorage.getItem('char_location')).then(data => {
+            set_spawned_enemies(data);
+        });
     }
     else {
         alert('Not logged!');
@@ -237,9 +266,6 @@ function start_game() {
             localStorage.setItem('map_size_x', data['mapArea']['sizeX']);
             localStorage.setItem('map_size_y', data['mapArea']['sizeY']);
             localStorage.setItem('char_id', char_id);
-        });
-        spawned_enemy_query(area_location).then(data => {
-            set_spawned_enemies(data);
         });
         getSkill(char_id).then(data => {
             if ('errors' in data) {
