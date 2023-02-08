@@ -17,9 +17,11 @@ function onCharacterEvent(data) {
     'character_logout': onCharacterLogout,
     'enemy_spawn': onEnemySpawn,
     'enemy_movement': onEnemyMovement,
-    'character_use_skill': onCharacterUseSkill,
+    // 'character_use_skill': onCharacterUseSkill,
     'target_damaged': onTargetDamaged,
     'target_knockout': onTargetKnockout,
+    'character_exp_gain': onExpUp
+
   }
   let event_type = data['onCharacterEvent']['characterEvent']['eventType'];
   let event_data = data['onCharacterEvent']['characterEvent']['data'];
@@ -29,35 +31,70 @@ function onCharacterEvent(data) {
 }
 
 
-function onCharacterUseSkill(data){
-console.log(data);
+// function onCharacterUseSkill(data){
+// console.log(data);
+// }
+
+
+function onExpUp(data){
+  if (
+      data['area'] != localStorage.getItem('char_location')
+      ||
+      data['skill_user_id'] != localStorage.getItem('char_id')
+    ){
+    return;
+  }
+  players[data['skill_user_id']]['lv'] = data['lv'];
+  let log_message = `${players[data['skill_user_id']]['name']} has earned ${data['exp']} EXP`;
+  InjectMessageInChat(0, 'Sys', log_message);
 }
 
 
+
 function onTargetDamaged(data){
-  if (data['area'] != data['area']){
+  if (data['area'] != localStorage.getItem('char_location')){
     return;
   }
+  console.log(data)
   let damage = data['damage'];
-  let attacker = players[data['skill_user_id']]['name'];
+  let attacker;
   let defender = data['target_name'];
+
+  if (data['classType'] == 'enemy'){
+    attacker = players[data['skill_user_id']]['name'];
+    enemies[data['target_id']]['hud'].elt.value = data['target_hp'];  
+  }
+  else {
+    attacker = nemies[data['skill_user_id']]['name'];
+    players[data['target_id']]['hud'].elt.value = data['target_hp'];
+  }
   
-  let attack_log = `${attacker} used ${data['skill_name']} at ${defender}`;
-  let damage_log = `${defender} has taken ${damage} damage`;
-  InjectMessageInChat(0, 'Sys', attack_log);
-  InjectMessageInChat(0, 'Sys', damage_log);
-  
-  players[data['target_id']]['hud'].elt.value = data['target_hp'];
   localStorage.setItem('current_sp', data['skill_user_sp']);
 
   if (localStorage.getItem('char_id') == data['target_id']){
     localStorage.setItem('current_hp', data['target_hp']);
   }
 
+  let attack_log = `${attacker} used ${data['skill_name']} at ${defender}`;
+  let damage_log = `${defender} has taken ${damage} damage`;
+  InjectMessageInChat(0, 'Sys', attack_log);
+  InjectMessageInChat(0, 'Sys', damage_log);
+
 }
 
 function onTargetKnockout(data){
-  console.log(data);
+  if (data['area'] != localStorage.getItem('char_location')){
+    return;
+  }
+  let log_message = `[K.O] ${data['target_name']} has fallen`;
+  InjectMessageInChat(0, 'Sys', log_message);
+
+  if (data['classType'] == 'enemy'){
+    enemies[data['target_id']]['sprite'].remove();
+    enemies[data['target_id']]['hud'].remove();
+    enemies[data['target_id']]['hud_label'].remove();
+    delete enemies['target_id'];
+  }
 }
 
 
@@ -195,7 +232,7 @@ function onCharacterLogIn(data) {
 function onCharacterLogout(data) {
   let player_id = data['id'];
   if (player_id in players){
-    let player_sprite = players[player_id].sprite;
+    let player_sprite = players[player_id]['sprite'];
     player_sprite.remove();
     delete players[player_id];
   }
