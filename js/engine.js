@@ -260,13 +260,21 @@ function preload() {
 
     // Spider
     images['spider_down'] = 'https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/enemies/spider_front.png';
+    images['spider_up'] = 'https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/enemies/spider_back.png';
+    images['spider_right'] = 'https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/enemies/spider_right.png';
+    images['spider_left'] = 'https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/enemies/spider_left.png';
 
     // Wolf
-    // TODO: Change this wolf_down to wolf_right when a wolf_down is added
-    images['wolf_down'] = 'https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/enemies/wolf_right.png';
+    images['wolf_down'] = 'https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/enemies/wolf_front.png';
+    images['wolf_up'] = 'https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/enemies/wolf_back.png';
+    images['wolf_right'] = 'https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/enemies/wolf_right.png';
+    images['wolf_left'] = 'https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/enemies/wolf_left.png';
 
     // Goblin
-    images['goblin_down'] = 'https://raw.githubusercontent.com/brunolcarli/Goblins-Client/master/static/img/goblins/goblin.png';
+    images['goblin_down'] = 'https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/enemies/goblin_front.png';
+    images['goblin_up'] = 'https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/enemies/goblin_back.png';
+    images['goblin_right'] = 'https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/enemies/goblin_right.png';
+    images['goblin_left'] = 'https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/enemies/goblin_left.png';
 
     // Background area sprites
     images['forest_bg'] = loadImage('https://i.postimg.cc/nhKGBvtK/Map002480.png');
