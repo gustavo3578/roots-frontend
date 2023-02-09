@@ -133,12 +133,19 @@ function set_players(data) {
     players = {};
     for (let i = 0; i < data.length; i++) {
         if (data[i]['isLogged'] == true) {
+            let state_sprite;
+            if (data[i]['isKo']){
+                state_sprite = images['ko_character'];
+            }
+            else {
+                state_sprite = images['character_' + data[i]['classType'] + '_down'];
+            }
             let player_data = {
                 "name": data[i]['name'],
                 "x": data[i]['positionX'],
                 "y": data[i]['positionY'],
                 "sprite": createImg(
-                    images['character_' + data[i]['classType'] + '_down'],
+                    state_sprite,
                     data[i]['name']
                 ),
                 "id": data[i]['id'],
@@ -228,32 +235,35 @@ function MountedLayoutChat() {
 
 
 function preload() {
+    // K.O
+    images['ko_character'] = 'https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/states/ko.png';
+
     // DPS Sprites
-    images['character_dps_right'] = 'https://i.ibb.co/sVqB43r/direita.png';
-    images['character_dps_left'] = 'https://i.ibb.co/GR0wjNp/esquerda4.png';
-    images['character_dps_up'] = 'https://i.ibb.co/VHKpw1v/tras1.png';
-    images['character_dps_down'] = 'https://i.ibb.co/VDGt9dQ/frente1.png';
+    images['character_dps_right'] = 'https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/characters/dps_right.png';
+    images['character_dps_left'] = 'https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/characters/dps_left.png';
+    images['character_dps_up'] = 'https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/characters/dps_back.png';
+    images['character_dps_down'] = 'https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/characters/dps_front.png';
 
     // SUPPORTER Sprites
-    images['character_supporter_right'] = 'https://i.ibb.co/M1GXc66/direita.png';
-    images['character_supporter_left'] = 'https://i.ibb.co/DrH5QsQ/esquerda.png';
-    images['character_supporter_up'] = 'https://i.ibb.co/pbV23dS/tras.png';
-    images['character_supporter_down'] = 'https://i.ibb.co/PYnKjDP/frente.png';
+    images['character_supporter_right'] = 'https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/characters/supporter_right.png';
+    images['character_supporter_left'] = 'https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/characters/supporter_left.png';
+    images['character_supporter_up'] = 'https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/characters/supporter_back.png';
+    images['character_supporter_down'] = 'https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/characters/supporter_front.png';
 
     // TANKER Sprites
-    images['character_tanker_right'] = 'https://i.ibb.co/gdjBG4X/direita.png';
-    images['character_tanker_left'] = 'https://i.ibb.co/bKJbbNg/esquerda.png';
-    images['character_tanker_up'] = 'https://i.ibb.co/H48JGNj/tras1.png';
-    images['character_tanker_down'] = 'https://i.ibb.co/gJXnLzC/frente1.png';
+    images['character_tanker_right'] = 'https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/characters/tanker_right.png';
+    images['character_tanker_left'] = 'https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/characters/tanker_left.png';
+    images['character_tanker_up'] = 'https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/characters/tanker_back.png';
+    images['character_tanker_down'] = 'https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/characters/tanker_front.png';
 
     // ENEMY Sprites
 
     // Spider
-    images['spider_down'] = 'https://i.ibb.co/ZBTNVvk/spider-front.png';
+    images['spider_down'] = 'https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/enemies/spider_front.png';
 
     // Wolf
     // TODO: Change this wolf_down to wolf_right when a wolf_down is added
-    images['wolf_down'] = 'https://i.ibb.co/93X6k6s/wolf-right.png';
+    images['wolf_down'] = 'https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/enemies/wolf_right.png';
 
     // Goblin
     images['goblin_down'] = 'https://raw.githubusercontent.com/brunolcarli/Goblins-Client/master/static/img/goblins/goblin.png';

@@ -50,7 +50,6 @@ function onExpUp(data){
 }
 
 
-
 function onTargetDamaged(data){
   if (data['area'] != localStorage.getItem('char_location')){
     return;
@@ -60,12 +59,12 @@ function onTargetDamaged(data){
   let attacker;
   let defender = data['target_name'];
 
+  attacker = players[data['skill_user_id']]['name'];
+
   if (data['classType'] == 'enemy'){
-    attacker = players[data['skill_user_id']]['name'];
-    enemies[data['target_id']]['hud'].elt.value = data['target_hp'];  
+    enemies[data['target_id']]['hud'].elt.value = data['target_hp'];
   }
   else {
-    attacker = nemies[data['skill_user_id']]['name'];
     players[data['target_id']]['hud'].elt.value = data['target_hp'];
   }
   
@@ -86,19 +85,36 @@ function onTargetKnockout(data){
   if (data['area'] != localStorage.getItem('char_location')){
     return;
   }
-  let log_message = `[K.O] ${data['target_name']} has fallen`;
-  InjectMessageInChat(0, 'Sys', log_message);
+  let target_name;
 
   if (data['classType'] == 'enemy'){
+    target_name = enemies[data['target_id']];
     enemies[data['target_id']]['sprite'].remove();
     enemies[data['target_id']]['hud'].remove();
     enemies[data['target_id']]['hud_label'].remove();
     delete enemies['target_id'];
   }
+  else {
+    target_name = players[data['target_id']];
+    players[data['target_id']]['sprite'].remove();
+    players[data['target_id']]['sprite'] = createImg(
+      images['ko_character'],
+      target_name
+    );
+    players[data['target_id']]['sprite'].elt.id = data['target_id'];
+    players[data['target_id']]['sprite'].elt.class_type = 'player';
+    players[data['target_id']]['sprite'].position(players[data['target_id']]['x'], players[data['target_id']]['y']);
+    players[data['target_id']]['sprite'].mouseClicked(TargetCallback);
+  }
+  let log_message = `[K.O] ${data['target_name']} has fallen`;
+  InjectMessageInChat(0, 'Sys', log_message);
 }
 
 
 function onCharacterMovement(data) {
+  if (data['map_area'] != localStorage.getItem('char_location')){
+    return;
+  }
   let player_id = data['id'];
   if (player_id in players) {
     let sprite_key = spriteshift(
@@ -114,7 +130,7 @@ function onCharacterMovement(data) {
     players[player_id]['sprite'].remove();
     players[player_id]['sprite'] = createImg(
       images[sprite_key],
-      data['name']
+      players[player_id]['name']
     ),
     players[player_id]['sprite'].elt.id = player_id;
     players[player_id]['sprite'].elt.class_type = 'player';
