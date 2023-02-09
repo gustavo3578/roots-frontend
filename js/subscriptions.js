@@ -10,6 +10,16 @@ function spriteshift(cx, cy, nx, ny, class_type) {
 }
 
 
+function enemy_spriteshift(cx, cy, nx, ny, name) {
+  if (nx > cx) { return name + '_right' }
+  if (nx < cx) { return name + '_left' }
+  if (ny > cy) { return name + '_down' }
+  if (ny < cy) { return name + '_up' }
+  return name + '_down'
+}
+
+
+
 function onCharacterEvent(data) {
   let valid_events = {
     'character_movement': onCharacterMovement,
@@ -50,7 +60,6 @@ function onExpUp(data){
 }
 
 
-
 function onTargetDamaged(data){
   if (data['area'] != localStorage.getItem('char_location')){
     return;
@@ -60,12 +69,12 @@ function onTargetDamaged(data){
   let attacker;
   let defender = data['target_name'];
 
+  attacker = players[data['skill_user_id']]['name'];
+
   if (data['classType'] == 'enemy'){
-    attacker = players[data['skill_user_id']]['name'];
-    enemies[data['target_id']]['hud'].elt.value = data['target_hp'];  
+    enemies[data['target_id']]['hud'].elt.value = data['target_hp'];
   }
   else {
-    attacker = nemies[data['skill_user_id']]['name'];
     players[data['target_id']]['hud'].elt.value = data['target_hp'];
   }
   
@@ -82,23 +91,41 @@ function onTargetDamaged(data){
 
 }
 
+
 function onTargetKnockout(data){
   if (data['area'] != localStorage.getItem('char_location')){
     return;
   }
-  let log_message = `[K.O] ${data['target_name']} has fallen`;
-  InjectMessageInChat(0, 'Sys', log_message);
+  let target_name;
 
   if (data['classType'] == 'enemy'){
+    target_name = enemies[data['target_id']];
     enemies[data['target_id']]['sprite'].remove();
     enemies[data['target_id']]['hud'].remove();
     enemies[data['target_id']]['hud_label'].remove();
     delete enemies['target_id'];
   }
+  else {
+    target_name = players[data['target_id']];
+    players[data['target_id']]['sprite'].remove();
+    players[data['target_id']]['sprite'] = createImg(
+      images['ko_character'],
+      target_name
+    );
+    players[data['target_id']]['sprite'].elt.id = data['target_id'];
+    players[data['target_id']]['sprite'].elt.class_type = 'player';
+    players[data['target_id']]['sprite'].position(players[data['target_id']]['x'], players[data['target_id']]['y']);
+    players[data['target_id']]['sprite'].mouseClicked(TargetCallback);
+  }
+  let log_message = `[K.O] ${data['target_name']} has fallen`;
+  InjectMessageInChat(0, 'Sys', log_message);
 }
 
 
 function onCharacterMovement(data) {
+  if (data['map_area'] != localStorage.getItem('char_location')){
+    return;
+  }
   let player_id = data['id'];
   if (player_id in players) {
     let sprite_key = spriteshift(
@@ -114,7 +141,7 @@ function onCharacterMovement(data) {
     players[player_id]['sprite'].remove();
     players[player_id]['sprite'] = createImg(
       images[sprite_key],
-      data['name']
+      players[player_id]['name']
     ),
     players[player_id]['sprite'].elt.id = player_id;
     players[player_id]['sprite'].elt.class_type = 'player';
@@ -127,14 +154,32 @@ function onCharacterMovement(data) {
 
 
 function onEnemyMovement(data) {
+  if (data['area'] != localStorage.getItem('char_location')){
+    return;
+  }
   let enemy_id = data['enemy_id'];
   if (enemy_id in enemies) {
-    // let enemy_name = data['enemy_name'];
+    let sprite_key = enemy_spriteshift(
+      enemies[enemy_id]['x'],
+      enemies[enemy_id]['y'],
+      data["position_x"],
+      data["position_y"],
+      data['enemy_name']
+    );
+
     enemies[enemy_id]['x'] = data["position_x"];
     enemies[enemy_id]['y'] = data["position_y"];
-    enemies[enemy_id]['sprite'].position(data['position_x'], data['position_y']);
-    enemies[enemy_id]['hud'].position(data['position_x'], data['position_y']-16);
-    enemies[enemy_id]['hud_label'].position(data['position_x'], data['position_y']-20);
+    enemies[enemy_id]['sprite'].remove();
+    enemies[enemy_id]['sprite'] = createImg(
+      images[sprite_key],
+      data['enemy_name']
+    ),
+    enemies[enemy_id]['sprite'].elt.id = enemy_id;
+    enemies[enemy_id]['sprite'].elt.class_type = 'enemy';
+    enemies[enemy_id]['sprite'].position(data["position_x"], data["position_y"]);
+    enemies[enemy_id]['sprite'].mouseClicked(TargetCallback);
+    enemies[enemy_id]['hud'].position(data['position_x']-64, data['position_y']-18);
+    enemies[enemy_id]['hud_label'].position(data['position_x'], data['position_y']-22);
   }
 }
 
