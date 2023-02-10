@@ -312,6 +312,9 @@ function preload() {
         'respawn_button': createButton('Rise'),
         'logout_button': createButton('Exit')
     };
+    respawn_menu['box_menu'].hide();
+    respawn_menu['respawn_button'].hide();
+    respawn_menu['logout_button'].hide();
     
 }
 
