@@ -9,7 +9,7 @@ var enemies = {};
 let targeting = false;
 let target = null;
 let target_class_type = null;
-
+let respawn_menu;
 
 
 function TargetCallback() {
@@ -82,6 +82,34 @@ function TargetCallback() {
             target_class_type = 'player';
         }
     }
+}
+
+
+function LogoutCallback(){
+    send_logout_request();
+}
+
+function RespawnCallback(){
+    console.log('a')
+    let respawn_area = localStorage.getItem('char_location');
+    let char_id = localStorage.getItem('char_id');
+    let input_data = `{id: ${char_id} areaLocation: \\\"${respawn_area}\\\"}`
+    respawn_mutation(input_data).then(response => {
+        console.log(response)
+        if (response['id'] == char_id){
+            localStorage.setItem('is_ko', response['isKo']);
+            localStorage.setItem('max_hp', data['maxHp']);
+            localStorage.setItem('max_sp', data['maxHp']);
+            localStorage.setItem('current_hp', data['currentHp']);
+            localStorage.setItem('current_sp', data['currentHp']);
+
+            respawn_menu['box_menu'].remove();
+            respawn_menu['respawn_button'].remove();
+            respawn_menu['logout_button'].remove();
+
+            window.location.href = 'game.html';
+        }
+    })
 }
 
 
@@ -277,7 +305,44 @@ function preload() {
     images['goblin_left'] = 'https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/enemies/goblin_left.png';
 
     // Background area sprites
-    images['forest_bg'] = loadImage('https://i.postimg.cc/nhKGBvtK/Map002480.png');
+    images['forest_bg'] = loadImage('https://i.postimg.cc/nhKGBvtK/Map002480.png')
+
+    respawn_menu = {
+        'box_menu': createImg('https://opengameart.org/sites/default/files/styles/medium/public/Menu.png', 'respawn_menu'),
+        'respawn_button': createButton('Rise'),
+        'logout_button': createButton('Exit')
+    };
+    
+}
+
+
+function load_respawn_menu(){
+    respawn_menu = {
+        'box_menu': createImg('https://opengameart.org/sites/default/files/styles/medium/public/Menu.png', 'respawn_menu'),
+        'respawn_button': createButton('Rise'),
+        'logout_button': createButton('Exit')
+    }
+    respawn_menu['box_menu'].position(
+        (localStorage.getItem('map_size_x') / 2)-100,
+        (localStorage.getItem('map_size_y') / 2)-100
+    );
+    respawn_menu['respawn_button'].position(
+        (localStorage.getItem('map_size_x') / 2)-80,
+        (localStorage.getItem('map_size_y') / 2)-6
+    );
+    respawn_menu['respawn_button'].mouseClicked(RespawnCallback);
+
+    respawn_menu['logout_button'].position(
+        (localStorage.getItem('map_size_x') / 2),
+        (localStorage.getItem('map_size_y') / 2)-6
+    );
+    respawn_menu['logout_button'].mouseClicked(LogoutCallback);
+
+    respawn_menu['box_menu'].show()
+    respawn_menu['respawn_button'].show();
+    respawn_menu['logout_button'].show();
+
+    return respawn_menu;
 }
 
 
@@ -295,6 +360,7 @@ function setup() {
         spawned_enemy_query(localStorage.getItem('char_location')).then(data => {
             set_spawned_enemies(data);
         });
+
     }
     else {
         alert('Not logged!');
@@ -347,22 +413,28 @@ function render_hud(){
 function draw() {
     var login_status = localStorage.getItem('logged');
     if (login_status) {
-        clear();
-        draw_upper_buffer();
-        image(upperBuffer, 0, 0);
-        drawSprites();
+        if (boolean(localStorage.getItem('is_ko')) == true){
+            load_respawn_menu();
+        }
+        else{
+            clear();
+            draw_upper_buffer();
+            image(upperBuffer, 0, 0);
+            drawSprites();
 
-        // draw hud
-        render_hud();
+            // draw hud
+            render_hud();
 
-        // draw player names
-        for (let player in players) {
-            players[player]['label'] = text(
-                players[player]['name'],
-                players[player]['x'],
-                players[player]['y'] - 10
-            );
-        };
+            // draw player names
+            for (let player in players) {
+                players[player]['label'] = text(
+                    players[player]['name'],
+                    players[player]['x'],
+                    players[player]['y'] - 10
+                );
+            };
+        }
+        
     }
 }
 
@@ -377,19 +449,15 @@ function start_game() {
         if (data['errors']) {
             alert('Failed to log in');
         }
-        query_character(char_id);
-        map_area_data_query(area_location).then(data => {
-            localStorage.setItem('map_size_x', data['mapArea']['sizeX']);
-            localStorage.setItem('map_size_y', data['mapArea']['sizeY']);
-            localStorage.setItem('char_id', char_id);
-        });
-        getSkill(char_id).then(data => {
-            if ('errors' in data) {
-                alert('An error ocurred');
-            } else {
-                localStorage.setItem("skills", JSON.stringify(data['character']['skills']));
+        else {
+            localStorage.setItem('is_ko', data['isKo']);
+            localStorage.setItem("skills", JSON.stringify(data['skills']));
+            map_area_data_query(area_location).then(data => {
+                localStorage.setItem('map_size_x', data['mapArea']['sizeX']);
+                localStorage.setItem('map_size_y', data['mapArea']['sizeY']);
+                localStorage.setItem('char_id', char_id);
                 window.location.href = 'game.html';
-            }
-        })
+            });
+        }
     });
 }

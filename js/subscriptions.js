@@ -117,8 +117,11 @@ function onTargetKnockout(data){
     players[data['target_id']]['sprite'].position(players[data['target_id']]['x'], players[data['target_id']]['y']);
     players[data['target_id']]['sprite'].mouseClicked(TargetCallback);
   }
-  let log_message = `[K.O] ${data['target_name']} has fallen`;
+  let log_message = `[K.O] ${target_name} has fallen`;
   InjectMessageInChat(0, 'Sys', log_message);
+  if (data['target_id'] == localStorage.getItem('char_id')){
+    localStorage.setItem('is_ko', true);
+  }
 }
 
 
@@ -240,6 +243,14 @@ function onCharacterLogIn(data) {
     return;
   }
 
+  let sprite_key;
+  if (data['current_hp'] <= 0){
+    sprite_key = images['ko_character'];
+  }
+  else {
+    sprite_key = 'character_' + data['classType'] + '_down';
+  }
+
   let player_id = data['id'];
   let player_data = {
     "x": data["x"],
@@ -249,7 +260,7 @@ function onCharacterLogIn(data) {
     'current_hp': data['current_hp'],
     'name': data['name'],
     "sprite": createImg(
-      images['character_' + data['classType'] + '_down'],
+      images[sprite_key],
       data['name']
     ),
     'class_type': data['classType'],
@@ -271,6 +282,8 @@ function onCharacterLogIn(data) {
   player_data['hud'].hide();
   player_data['hud_label'].hide();
   players[player_id] = player_data;
+
+
 }
 
 

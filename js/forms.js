@@ -11,6 +11,8 @@ function send_login_request(){
 
 
 function send_logout_request(){
+
+    console.log('flag')
     let token = localStorage.getItem('token');
     let char_id = localStorage.getItem('char_id');
     let input_data = `{id: \\\"${char_id}\\\"}`;

@@ -178,7 +178,7 @@ function user_characters() {
 
 function character_login_mutation(input_data, authorization) {
     const query = `characterLogin(input: ${input_data})`;
-    const payload = `{"query": "mutation charLogin{${query}{character { maxHp maxSp currentHp currentSp }}}"}`;
+    const payload = `{"query": "mutation charLogin{${query}{character { maxHp maxSp currentHp currentSp isKo skills{ name spCost power range description effect{targetAttributes duration value condition}} }}}"}`;
 
     var options = get_request_options(payload);
     // options['headers']['Authorization'] = authorization;
@@ -191,6 +191,7 @@ function character_login_mutation(input_data, authorization) {
             localStorage.setItem('max_sp', data['maxHp']);
             localStorage.setItem('current_hp', data['currentHp']);
             localStorage.setItem('current_sp', data['currentHp']);
+            localStorage.setItem('is_ko', data['isKo']);
             return data;
         })
         .catch(err => {
@@ -327,13 +328,28 @@ function character_use_skill_mutation(input_data){
 
 
 function query_character(character_id){
-    let payload = `{"query": "query { character(id: ${character_id}){ maxHp maxSp currentHp currentSp } }"}`;
+    let payload = `{"query": "query { character(id: ${character_id}){ maxHp maxSp currentHp currentSp isKo} }"}`;
     var options = get_request_options(payload);
     return fetch(server_host, options)
         .then(json)
         .then(response => {
-            data = data['data']['character'];
+            // data = data['data']['character'];
             return response['data'];
+        })
+        .catch(err => {
+            console.error(err);
+    });
+}
+
+
+function respawn_mutation(input_data){
+    let payload = `{"query": "mutation { characterRespawn(input: ${input_data}){character {id name isKo maxHp maxSp currentHp currentSp areaLocation classType}} }"}`;
+    var options = get_request_options(payload);
+    return fetch(server_host, options)
+        .then(json)
+        .then(response => {
+            data = response['data']['characterRespawn']['character'];
+            return data
         })
         .catch(err => {
             console.error(err);
