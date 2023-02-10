@@ -209,7 +209,8 @@ function get_players(map_area) {
 
 
 function draw_upper_buffer() {
-    upperBuffer.background(images['forest_bg']);
+    // upperBuffer.background(images['forest_bg']);
+    upperBuffer.background(images[localStorage.getItem('char_location')]);
 }
 
 
@@ -306,6 +307,10 @@ function preload() {
 
     // Background area sprites
     images['forest_bg'] = loadImage('https://i.postimg.cc/nhKGBvtK/Map002480.png')
+    images['ancient_forest_area1'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/ancient_forest_area_1.png')
+    images['ancient_forest_area2'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/ancient_forest_area_2.png')
+    images['ancient_forest_area3'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/ancient_forest_area_3.png')
+    images['ancient_forest_village'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/ancient_forest_village.png')
 
     respawn_menu = {
         'box_menu': createImg('https://opengameart.org/sites/default/files/styles/medium/public/Menu.png', 'respawn_menu'),
