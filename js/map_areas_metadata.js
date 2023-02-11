@@ -31,7 +31,7 @@ let area_transfer_points = {
     },
     'open_fields_area1': {
         0: [2,  400, 'arrow_left', 'open_fields_area14'],
-        1: [580, 400, 'arrow_right', 'open_fields_area2'],
+        1: [540, 400, 'arrow_right', 'open_fields_area2'],
         2: [300, 16, 'arrow_up', 'citadel_south_area'],
     },
     'open_fields_area2': {

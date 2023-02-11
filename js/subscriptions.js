@@ -99,25 +99,29 @@ function onTargetKnockout(data){
   let target_name;
 
   if (data['classType'] == 'enemy'){
+    let log_message;
+
     target_name = enemies[data['target_id']];
     enemies[data['target_id']]['sprite'].remove();
     enemies[data['target_id']]['hud'].remove();
     enemies[data['target_id']]['hud_label'].remove();
-    delete enemies['target_id'];
+    log_message = `[K.O] ${target_name['name']} has fallen`;
+    delete enemies[data['target_id']];
   }
   else {
     target_name = players[data['target_id']];
     players[data['target_id']]['sprite'].remove();
     players[data['target_id']]['sprite'] = createImg(
       images['ko_character'],
-      target_name
+      target_name['name']
     );
     players[data['target_id']]['sprite'].elt.id = data['target_id'];
     players[data['target_id']]['sprite'].elt.class_type = 'player';
     players[data['target_id']]['sprite'].position(players[data['target_id']]['x'], players[data['target_id']]['y']);
     players[data['target_id']]['sprite'].mouseClicked(TargetCallback);
+    log_message = `[K.O] ${target_name['name']} has fallen`;
   }
-  let log_message = `[K.O] ${target_name} has fallen`;
+
   InjectMessageInChat(0, 'Sys', log_message);
   if (data['target_id'] == localStorage.getItem('char_id')){
     localStorage.setItem('is_ko', true);
