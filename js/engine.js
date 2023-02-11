@@ -430,7 +430,6 @@ function set_transfer_arrow_pointer(){
         pointer.elt.value = transfer_coords[i][3];
         pointer.mouseClicked(AreaTransferCallback);
         pointer.show();
-        // console.log(transfer_coords[i][0])
     }
 
 }
@@ -467,9 +466,9 @@ function MountedLayoutSkill() {
         $("#skills").css("height", `${canvas.outerHeight()}`).css("display", 'block')
         skillsPlayer.forEach(x => {
             var html = $(
-                `<button type="button" onclick="use_skill('${x.name}', this)" class="btn btn-outline-dark" data-toggle="tooltip" data-html="true" data-placement="bottom"
+                `<div><button type="button" onclick="use_skill('${x.name}', this)" class="btn btn-outline-dark btn-sm" data-toggle="tooltip" data-html="true" data-placement="bottom"
                 title="<span class='badge badge-danger'>Power: ${x.power}</span> <span class='badge badge-info'>Range: ${x.range}</span> <span class='badge badge-warning'>Cost: ${x.spCost}</span>"
-                ">${x.name}</button>`);
+                ">${x.name}</button></div>`);
 
             $("#skills").children()[0].append(html[0])
         });
