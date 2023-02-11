@@ -106,7 +106,7 @@ function onTargetKnockout(data){
     enemies[data['target_id']]['hud'].remove();
     enemies[data['target_id']]['hud_label'].remove();
     log_message = `[K.O] ${target_name['name']} has fallen`;
-    delete enemies[data['target_id']];
+    delete enemies['target_id'];
   }
   else {
     target_name = players[data['target_id']];
