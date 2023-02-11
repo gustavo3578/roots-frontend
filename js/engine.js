@@ -341,7 +341,14 @@ function preload() {
 
     // Background area sprites
     images['forest_bg'] = loadImage('https://i.postimg.cc/nhKGBvtK/Map002480.png')
-    
+
+    // Citadel
+    images['citadel_central_area'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/citadel_central_area.png');
+    images['citadel_east_area'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/citadel_east_area.png');
+    images['citadel_south_area'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/citadel_south_area.png');
+    images['citadel_north_area'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/citadel_north_area.png');
+    images['citadel_west_area'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/citadel_west_area.png');
+
     // Open Fields
     images['open_fields_area1'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/open_fields_area1.png');
     images['open_fields_area2'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/open_fields_area2.png');
