@@ -355,3 +355,18 @@ function respawn_mutation(input_data){
             console.error(err);
     });
 }
+
+
+function character_area_transfer_mutation(input_data){
+    let payload = `{"query": "mutation { characterMapAreaTransfer(input: ${input_data}){ character { id areaLocation positionX positionY } } }"}`;
+    var options = get_request_options(payload);
+    return fetch(server_host, options)
+        .then(json)
+        .then(response => {
+            data = response['data']['characterMapAreaTransfer']['character'];
+            return data
+        })
+        .catch(err => {
+            console.error(err);
+    });
+}
