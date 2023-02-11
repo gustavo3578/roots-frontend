@@ -12,6 +12,40 @@ let target_class_type = null;
 let respawn_menu;
 
 
+
+function checkCollision(object_1, object_2) {
+    // Get distances between the objects    
+    let distanceVect = p5.Vector.sub(object_2, object_1);
+
+    // Calculate magnitude of the vector separating the objects
+    let distanceVectMag = distanceVect.mag();
+
+    // Minimum distance before they are touching
+    let minDistance = 48;
+
+    if (distanceVectMag < minDistance) {
+      return true;
+    }
+    return false;
+}
+
+
+function AreaTransferCallback(){
+    let char = players[localStorage.getItem('char_id')];
+    let char_vec = new p5.Vector(char['sprite'].x, char['sprite'].y);
+    let pointer_vec = new p5.Vector(this.x, this.y);
+    if (checkCollision(char_vec, pointer_vec)){
+        let input_data = `{ id: ${char['id']} areaName: \\\"${this.elt.value}\\\" }`;
+        character_area_transfer_mutation(input_data).then(data => {
+            if (data['id'] == char['id']){
+                localStorage.setItem('char_location', data['areaLocation']);
+                window.location.href = 'game.html';
+            }
+        });
+    }
+}
+
+
 function TargetCallback() {
     // Enemy class type target
     if (this.elt.class_type == 'enemy' && this.elt.id in enemies){
@@ -307,10 +341,44 @@ function preload() {
 
     // Background area sprites
     images['forest_bg'] = loadImage('https://i.postimg.cc/nhKGBvtK/Map002480.png')
-    images['ancient_forest_area1'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/ancient_forest_area_1.png')
-    images['ancient_forest_area2'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/ancient_forest_area_2.png')
-    images['ancient_forest_area3'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/ancient_forest_area_3.png')
-    images['ancient_forest_village'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/ancient_forest_village.png')
+
+    // Citadel
+    images['citadel_central_area'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/citadel_central_area.png');
+    images['citadel_east_area'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/citadel_east_area.png');
+    images['citadel_south_area'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/citadel_south_area.png');
+    images['citadel_north_area'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/citadel_north_area.png');
+    images['citadel_west_area'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/citadel_west_area.png');
+
+    // Open Fields
+    images['open_fields_area1'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/open_fields_area1.png');
+    images['open_fields_area2'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/open_fields_area2.png');
+    images['open_fields_area3'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/open_fields_area3.png');
+    images['open_fields_area4'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/open_fields_area4.png');
+    images['open_fields_area5'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/open_fields_area5.png');
+    images['open_fields_area6'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/open_fields_area6.png');
+    images['open_fields_area7'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/open_fields_area7.png');
+    images['open_fields_area8'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/open_fields_area8.png');
+    images['open_fields_area9'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/open_fields_area9.png');
+    images['open_fields_area10'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/open_fields_area10.png');
+    images['open_fields_area11'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/open_fields_area11.png');
+    images['open_fields_area12'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/open_fields_area12.png');
+    images['open_fields_area13'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/open_fields_area13.png');
+    images['open_fields_area14'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/open_fields_area14.png');
+    
+    // Ancient Forest
+    images['ancient_forest_area1'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/ancient_forest_area_1.png');
+    images['ancient_forest_area2'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/ancient_forest_area_2.png');
+    images['ancient_forest_area3'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/ancient_forest_area_3.png');
+    images['ancient_forest_village'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/ancient_forest_village.png');
+
+
+
+    // system elements
+    images['arrow_up'] = 'https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/sys/arrow_up.png';
+    images['arrow_right'] = 'https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/sys/arrow_right.png';
+    images['arrow_down'] = 'https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/sys/arrow_down.png';
+    images['arrow_left'] = 'https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/sys/arrow_left.png';
+
 
     respawn_menu = {
         'box_menu': createImg('https://opengameart.org/sites/default/files/styles/medium/public/Menu.png', 'respawn_menu'),
@@ -354,6 +422,20 @@ function load_respawn_menu(){
 }
 
 
+function set_transfer_arrow_pointer(){
+    let transfer_coords = area_transfer_points[localStorage.getItem('char_location')];
+    for (i in transfer_coords){
+        var pointer = createImg(images[transfer_coords[i][2]], 'transfer_point');
+        pointer.position(transfer_coords[i][0], transfer_coords[i][1]);
+        pointer.elt.value = transfer_coords[i][3];
+        pointer.mouseClicked(AreaTransferCallback);
+        pointer.show();
+        // console.log(transfer_coords[i][0])
+    }
+
+}
+
+
 function setup() {
     var login_status = localStorage.getItem('logged');
     if (login_status) {
@@ -368,6 +450,7 @@ function setup() {
         spawned_enemy_query(localStorage.getItem('char_location')).then(data => {
             set_spawned_enemies(data);
         });
+        set_transfer_arrow_pointer();
 
     }
     else {
@@ -427,7 +510,7 @@ function draw() {
         else{
             if (mouseIsPressed) {
                 move_to_direction(mouseX, mouseY);
-              }
+            }
             
             clear();
             draw_upper_buffer();
