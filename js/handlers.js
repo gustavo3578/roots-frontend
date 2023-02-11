@@ -59,6 +59,14 @@ function moveright() {
 
 
 function move_to_direction(nx, ny) {
+
+    if (nx > upperBuffer.width){
+        return
+    }
+    if (ny > upperBuffer.height){
+        return
+    }
+
     let player_character = players[localStorage.getItem('char_id')];
     let cx = player_character.x;
     let cy = player_character.y;
@@ -70,10 +78,10 @@ function move_to_direction(nx, ny) {
     if (ny < cy) { y = cy - 28; }
 
     if (x > upperBuffer.width || x < 0){
-        x = cx;
+        return
     }
     if (y > upperBuffer.height || y < 0){
-        y = cy;
+        return
     }
 
     update_position(player_character.id, x, y);
