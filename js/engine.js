@@ -341,10 +341,30 @@ function preload() {
 
     // Background area sprites
     images['forest_bg'] = loadImage('https://i.postimg.cc/nhKGBvtK/Map002480.png')
-    images['ancient_forest_area1'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/ancient_forest_area_1.png')
-    images['ancient_forest_area2'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/ancient_forest_area_2.png')
-    images['ancient_forest_area3'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/ancient_forest_area_3.png')
-    images['ancient_forest_village'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/ancient_forest_village.png')
+    
+    // Open Fields
+    images['open_fields_area1'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/open_fields_area1.png');
+    images['open_fields_area2'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/open_fields_area2.png');
+    images['open_fields_area3'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/open_fields_area3.png');
+    images['open_fields_area4'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/open_fields_area4.png');
+    images['open_fields_area5'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/open_fields_area5.png');
+    images['open_fields_area6'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/open_fields_area6.png');
+    images['open_fields_area7'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/open_fields_area7.png');
+    images['open_fields_area8'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/open_fields_area8.png');
+    images['open_fields_area9'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/open_fields_area9.png');
+    images['open_fields_area10'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/open_fields_area10.png');
+    images['open_fields_area11'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/open_fields_area11.png');
+    images['open_fields_area12'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/open_fields_area12.png');
+    images['open_fields_area13'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/open_fields_area13.png');
+    images['open_fields_area14'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/open_fields_area14.png');
+    
+    // Ancient Forest
+    images['ancient_forest_area1'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/ancient_forest_area_1.png');
+    images['ancient_forest_area2'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/ancient_forest_area_2.png');
+    images['ancient_forest_area3'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/ancient_forest_area_3.png');
+    images['ancient_forest_village'] = loadImage('https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/maps/ancient_forest_village.png');
+
+
 
     // system elements
     images['arrow_up'] = 'https://raw.githubusercontent.com/gustavo3578/roots-frontend/main/static/img/sys/arrow_up.png';
