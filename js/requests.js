@@ -358,7 +358,7 @@ function respawn_mutation(input_data){
 
 
 function character_area_transfer_mutation(input_data){
-    let payload = `{"query": "mutation { characterMapAreaTransfer(input: ${input_data}){ character { id areaLocation positionX positionY } } }"}`;
+    let payload = `{"query": "mutation { characterMapAreaTransfer(input: ${input_data}){ character { id areaLocation positionX positionY mapMetadata{ name sizeX sizeY } } } }"}`;
     var options = get_request_options(payload);
     return fetch(server_host, options)
         .then(json)

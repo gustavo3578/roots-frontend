@@ -39,6 +39,8 @@ function AreaTransferCallback(){
         character_area_transfer_mutation(input_data).then(data => {
             if (data['id'] == char['id']){
                 localStorage.setItem('char_location', data['areaLocation']);
+                localStorage.setItem('map_size_x', data['mapMetadata']['sizeX']);
+                localStorage.setItem('map_size_y', data['mapMetadata']['sizeY']);
                 window.location.href = 'game.html';
             }
         });
