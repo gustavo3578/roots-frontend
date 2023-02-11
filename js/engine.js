@@ -425,6 +425,10 @@ function draw() {
             load_respawn_menu();
         }
         else{
+            if (mouseIsPressed) {
+                move_to_direction(mouseX, mouseY);
+              }
+            
             clear();
             draw_upper_buffer();
             image(upperBuffer, 0, 0);

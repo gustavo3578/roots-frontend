@@ -58,6 +58,29 @@ function moveright() {
 }
 
 
+function move_to_direction(nx, ny) {
+    let player_character = players[localStorage.getItem('char_id')];
+    let cx = player_character.x;
+    let cy = player_character.y;
+    let x;
+    let y;
+    if (nx > cx) { x = cx + 28; }
+    if (ny > cy) { y = cy + 28; }
+    if (nx < cx) { x = cx - 28; }
+    if (ny < cy) { y = cy - 28; }
+
+    if (x > upperBuffer.width || x < 0){
+        x = cx;
+    }
+    if (y > upperBuffer.height || y < 0){
+        y = cy;
+    }
+
+    update_position(player_character.id, x, y);
+  }
+  
+
+
 function send_message() {
     var message_input = document.getElementById('message_input').value;
     var user = localStorage.getItem('username');
